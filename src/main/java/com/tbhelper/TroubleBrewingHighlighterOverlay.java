@@ -79,7 +79,8 @@ public class TroubleBrewingHighlighterOverlay extends Overlay
             renderNpc(graphics, npc, colourFor(resourceType), stroke);
         }
 
-        // Bucket, bowl, axe, bark, rat meat and sweetgrubs are generic item IDs.
+        // Bucket, bowl, axe, knife, logs, bark, rat meat and sweetgrubs include
+        // generic item IDs.
         // Only render them while verified Trouble Brewing scene objects are loaded.
         if (plugin.isTroubleBrewingSceneLoaded() && config.drawTile())
         {
@@ -268,6 +269,8 @@ public class TroubleBrewingHighlighterOverlay extends Overlay
                 return config.showHoppers();
             case BARK:
                 return config.showBark();
+            case PROCESSED_BARK:
+                return config.showProcessedBark();
             case BAIT:
                 return config.showBait();
             case GRUBS:
@@ -295,6 +298,8 @@ public class TroubleBrewingHighlighterOverlay extends Overlay
                 return config.hopperColor();
             case BARK:
                 return config.barkColor();
+            case PROCESSED_BARK:
+                return config.processedBarkColor();
             case BAIT:
                 return config.baitColor();
             case GRUBS:

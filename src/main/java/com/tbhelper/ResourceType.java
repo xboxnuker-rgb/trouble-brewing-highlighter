@@ -6,6 +6,7 @@ public enum ResourceType
     COLOURED_WATER,
     HOPPERS,
     BARK,
+    PROCESSED_BARK,
     BAIT,
     GRUBS,
     FLOWERS,

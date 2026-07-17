@@ -113,8 +113,8 @@ public interface TroubleBrewingHighlighterConfig extends Config
     @ConfigItem(
         position = 3,
         keyName = "showBark",
-        name = "Bark & Axe",
-        description = "Highlight scrapey trees, bark and the supplied bronze axe",
+        name = "Bark Preparation",
+        description = "Highlight Scrapey trees, logs, knives and the supplied bronze axe",
         section = resourceSection
     )
     default boolean showBark()
@@ -124,6 +124,18 @@ public interface TroubleBrewingHighlighterConfig extends Config
 
     @ConfigItem(
         position = 4,
+        keyName = "showProcessedBark",
+        name = "Processed Scrapey Bark",
+        description = "Highlight processed Scrapey bark and its upstairs painting",
+        section = resourceSection
+    )
+    default boolean showProcessedBark()
+    {
+        return true;
+    }
+
+    @ConfigItem(
+        position = 5,
         keyName = "showBait",
         name = "Sweetgrub Bait",
         description = "Highlight usable sweetgrub mounds and raw rat meat",
@@ -135,7 +147,7 @@ public interface TroubleBrewingHighlighterConfig extends Config
     }
 
     @ConfigItem(
-        position = 5,
+        position = 6,
         keyName = "showGrubs",
         name = "Collected Sweetgrubs",
         description = "Highlight collected sweetgrubs",
@@ -147,7 +159,7 @@ public interface TroubleBrewingHighlighterConfig extends Config
     }
 
     @ConfigItem(
-        position = 6,
+        position = 7,
         keyName = "showFlowers",
         name = "Flowers, Bowls & Kettle",
         description = "Highlight flowers, ordinary bowls and the flower kettle",
@@ -159,7 +171,7 @@ public interface TroubleBrewingHighlighterConfig extends Config
     }
 
     @ConfigItem(
-        position = 7,
+        position = 8,
         keyName = "showBitternuts",
         name = "Bitternuts",
         description = "Highlight bitternut trees, monkeys and collected bitternuts",
@@ -171,7 +183,7 @@ public interface TroubleBrewingHighlighterConfig extends Config
     }
 
     @ConfigItem(
-        position = 8,
+        position = 9,
         keyName = "showRum",
         name = "Finished Rum",
         description = "Highlight bottle machines, conveyors, rum crates and finished rum",
@@ -228,8 +240,8 @@ public interface TroubleBrewingHighlighterConfig extends Config
     @ConfigItem(
         position = 3,
         keyName = "barkColor",
-        name = "Bark",
-        description = "Bark-route highlight colour",
+        name = "Bark Preparation",
+        description = "Scrapey tree, logs, knife and axe highlight colour",
         section = colourSection
     )
     default Color barkColor()
@@ -239,6 +251,18 @@ public interface TroubleBrewingHighlighterConfig extends Config
 
     @ConfigItem(
         position = 4,
+        keyName = "processedBarkColor",
+        name = "Processed Scrapey Bark",
+        description = "Processed Scrapey bark and painting highlight colour",
+        section = colourSection
+    )
+    default Color processedBarkColor()
+    {
+        return new Color(255, 105, 180);
+    }
+
+    @ConfigItem(
+        position = 5,
         keyName = "baitColor",
         name = "Sweetgrub Bait",
         description = "Raw rat meat and usable mound highlight colour",
@@ -250,7 +274,7 @@ public interface TroubleBrewingHighlighterConfig extends Config
     }
 
     @ConfigItem(
-        position = 5,
+        position = 6,
         keyName = "grubColor",
         name = "Sweetgrubs",
         description = "Sweetgrub-route highlight colour",
@@ -262,7 +286,7 @@ public interface TroubleBrewingHighlighterConfig extends Config
     }
 
     @ConfigItem(
-        position = 6,
+        position = 7,
         keyName = "flowerColor",
         name = "Flowers, Bowls & Kettle",
         description = "Flower, ordinary-bowl and kettle highlight colour",
@@ -274,7 +298,7 @@ public interface TroubleBrewingHighlighterConfig extends Config
     }
 
     @ConfigItem(
-        position = 7,
+        position = 8,
         keyName = "bitternutColor",
         name = "Bitternuts",
         description = "Bitternut highlight colour",
@@ -286,7 +310,7 @@ public interface TroubleBrewingHighlighterConfig extends Config
     }
 
     @ConfigItem(
-        position = 8,
+        position = 9,
         keyName = "rumColor",
         name = "Finished Rum",
         description = "Finished-rum highlight colour",

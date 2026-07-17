@@ -48,6 +48,7 @@ public class TroubleBrewingInventoryOverlay extends WidgetItemOverlay
 
         renderToolWidget(graphics, InterfaceID.BrewTools.BUCKET_MODEL1, ResourceType.WATER);
         renderToolWidget(graphics, InterfaceID.BrewTools.AXE_MODEL1, ResourceType.BARK);
+        renderToolWidget(graphics, InterfaceID.BrewTools.KNIFE_MODEL1, ResourceType.BARK);
         renderToolWidget(graphics, InterfaceID.BrewTools.BOWL_MODEL1, ResourceType.FLOWERS);
         renderToolWidget(graphics, InterfaceID.BrewTools.MEAT_MODEL1, ResourceType.BAIT);
         return dimension;
@@ -128,6 +129,8 @@ public class TroubleBrewingInventoryOverlay extends WidgetItemOverlay
                 return config.showHoppers();
             case BARK:
                 return config.showBark();
+            case PROCESSED_BARK:
+                return config.showProcessedBark();
             case BAIT:
                 return config.showBait();
             case GRUBS:
@@ -155,6 +158,8 @@ public class TroubleBrewingInventoryOverlay extends WidgetItemOverlay
                 return config.hopperColor();
             case BARK:
                 return config.barkColor();
+            case PROCESSED_BARK:
+                return config.processedBarkColor();
             case BAIT:
                 return config.baitColor();
             case GRUBS:

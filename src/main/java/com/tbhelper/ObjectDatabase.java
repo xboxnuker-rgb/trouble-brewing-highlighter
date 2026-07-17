@@ -32,7 +32,7 @@ public final class ObjectDatabase
         register(objects, ObjectID.BREW_WATER_SIGN, ResourceType.WATER);
         register(objects, ObjectID.BREW_COLOUR_WATER_RED_SIGN, ResourceType.COLOURED_WATER);
         register(objects, ObjectID.BREW_COLOUR_WATER_BLUE_SIGN, ResourceType.COLOURED_WATER);
-        register(objects, ObjectID.BREW_BARK_SIGN, ResourceType.BARK);
+        register(objects, ObjectID.BREW_BARK_SIGN, ResourceType.PROCESSED_BARK);
         register(objects, ObjectID.BREW_SWEET_GRUBS_SIGN, ResourceType.GRUBS);
         register(objects, ObjectID.BREW_BITTERNUT_SIGN, ResourceType.BITTERNUTS);
 
@@ -56,8 +56,10 @@ public final class ObjectDatabase
         register(items, ItemID.BOWL_WATER, ResourceType.FLOWERS);
         register(items, ItemID.BREW_BOWL_RED, ResourceType.COLOURED_WATER);
         register(items, ItemID.BREW_BOWL_BLUE, ResourceType.COLOURED_WATER);
-        register(items, ItemID.BREW_SCRAPEY_BARK, ResourceType.BARK);
+        register(items, ItemID.BREW_SCRAPEY_LOGS, ResourceType.BARK);
         register(items, ItemID.BRONZE_AXE, ResourceType.BARK);
+        register(items, ItemID.KNIFE, ResourceType.BARK);
+        register(items, ItemID.BREW_SCRAPEY_BARK, ResourceType.PROCESSED_BARK);
         register(items, ItemID.RAW_RAT_MEAT, ResourceType.BAIT);
         register(items, ItemID.BREW_SWEETGRUBS, ResourceType.GRUBS);
         register(items, ItemID.BREW_BLUE_FLOWER, ResourceType.FLOWERS);
