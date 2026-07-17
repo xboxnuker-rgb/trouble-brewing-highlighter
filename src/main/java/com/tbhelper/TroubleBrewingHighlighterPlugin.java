@@ -4,7 +4,6 @@ import com.google.inject.Provides;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.IdentityHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
@@ -17,7 +16,6 @@ import net.runelite.api.NPC;
 import net.runelite.api.Player;
 import net.runelite.api.Scene;
 import net.runelite.api.Tile;
-import net.runelite.api.TileItem;
 import net.runelite.api.TileObject;
 import net.runelite.api.WallObject;
 import net.runelite.api.WorldView;
@@ -29,8 +27,6 @@ import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.GroundObjectDespawned;
 import net.runelite.api.events.GroundObjectSpawned;
-import net.runelite.api.events.ItemDespawned;
-import net.runelite.api.events.ItemSpawned;
 import net.runelite.api.events.NpcDespawned;
 import net.runelite.api.events.NpcSpawned;
 import net.runelite.api.events.WallObjectDespawned;
@@ -45,7 +41,8 @@ import net.runelite.client.ui.overlay.OverlayManager;
 @PluginDescriptor(
         name = "Trouble Brewing Highlighter",
         description = "Colour-coded highlights for Trouble Brewing resources and processing stations",
-        tags = {"trouble", "brewing", "minigame", "highlight", "helper"}
+        tags = {"trouble", "brewing", "minigame", "highlight", "helper"},
+        enabledByDefault = false
 )
 public class TroubleBrewingHighlighterPlugin extends Plugin
 {
@@ -67,7 +64,6 @@ public class TroubleBrewingHighlighterPlugin extends Plugin
     private TroubleBrewingInventoryOverlay inventoryOverlay;
 
     private final Map<TileObject, HighlightedObject> highlightedObjects = new IdentityHashMap<>();
-    private final Map<TileItem, HighlightedGroundItem> highlightedGroundItems = new IdentityHashMap<>();
     private final Map<NPC, HighlightedNpc> highlightedNpcs = new IdentityHashMap<>();
     private int bootstrapTicksRemaining;
 
@@ -162,18 +158,6 @@ public class TroubleBrewingHighlighterPlugin extends Plugin
     public void onGroundObjectDespawned(GroundObjectDespawned event)
     {
         highlightedObjects.remove(event.getGroundObject());
-    }
-
-    @Subscribe
-    public void onItemSpawned(ItemSpawned event)
-    {
-        trackGroundItem(event.getTile(), event.getItem());
-    }
-
-    @Subscribe
-    public void onItemDespawned(ItemDespawned event)
-    {
-        highlightedGroundItems.remove(event.getItem());
     }
 
     @Subscribe
@@ -284,19 +268,6 @@ public class TroubleBrewingHighlighterPlugin extends Plugin
             trackObject(groundObject);
         }
 
-        List<TileItem> groundItems = tile.getGroundItems();
-        if (groundItems == null)
-        {
-            return;
-        }
-
-        for (TileItem item : groundItems)
-        {
-            if (item != null)
-            {
-                trackGroundItem(tile, item);
-            }
-        }
     }
 
     private void trackObject(TileObject object)
@@ -307,18 +278,6 @@ public class TroubleBrewingHighlighterPlugin extends Plugin
             highlightedObjects.put(
                     object,
                     new HighlightedObject(object, resourceType)
-            );
-        }
-    }
-
-    private void trackGroundItem(Tile tile, TileItem item)
-    {
-        ResourceType resourceType = ObjectDatabase.getItem(item.getId());
-        if (resourceType != null)
-        {
-            highlightedGroundItems.put(
-                    item,
-                    new HighlightedGroundItem(tile, resourceType)
             );
         }
     }
@@ -338,18 +297,12 @@ public class TroubleBrewingHighlighterPlugin extends Plugin
     private void clearCache()
     {
         highlightedObjects.clear();
-        highlightedGroundItems.clear();
         highlightedNpcs.clear();
     }
 
     Collection<HighlightedObject> getHighlightedObjects()
     {
         return Collections.unmodifiableCollection(highlightedObjects.values());
-    }
-
-    Collection<HighlightedGroundItem> getHighlightedGroundItems()
-    {
-        return Collections.unmodifiableCollection(highlightedGroundItems.values());
     }
 
     Collection<HighlightedNpc> getHighlightedNpcs()
@@ -382,30 +335,6 @@ public class TroubleBrewingHighlighterPlugin extends Plugin
         {
             return tileObject;
         }
-
-        ResourceType getResourceType()
-        {
-            return resourceType;
-        }
-
-    }
-
-    static final class HighlightedGroundItem
-    {
-        private final Tile tile;
-        private final ResourceType resourceType;
-
-        private HighlightedGroundItem(Tile tile, ResourceType resourceType)
-        {
-            this.tile = tile;
-            this.resourceType = resourceType;
-        }
-
-        Tile getTile()
-        {
-            return tile;
-        }
-
 
         ResourceType getResourceType()
         {

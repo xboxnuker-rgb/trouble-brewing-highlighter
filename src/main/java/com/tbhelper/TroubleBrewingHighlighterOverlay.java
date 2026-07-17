@@ -4,7 +4,6 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.Polygon;
 import java.awt.Shape;
 import java.awt.Stroke;
 import javax.inject.Inject;
@@ -13,9 +12,7 @@ import net.runelite.api.DecorativeObject;
 import net.runelite.api.GameObject;
 import net.runelite.api.GroundObject;
 import net.runelite.api.NPC;
-import net.runelite.api.Perspective;
 import net.runelite.api.Player;
-import net.runelite.api.Tile;
 import net.runelite.api.TileObject;
 import net.runelite.api.WallObject;
 import net.runelite.api.WorldView;
@@ -79,30 +76,6 @@ public class TroubleBrewingHighlighterOverlay extends Overlay
             renderNpc(graphics, npc, colourFor(resourceType), stroke);
         }
 
-        // Bucket, bowl, axe, knife, logs, bark, rat meat and sweetgrubs include
-        // generic item IDs.
-        // Only render them while verified Trouble Brewing scene objects are loaded.
-        if (plugin.isTroubleBrewingSceneLoaded() && config.drawTile())
-        {
-            for (TroubleBrewingHighlighterPlugin.HighlightedGroundItem highlightedItem
-                : plugin.getHighlightedGroundItems())
-            {
-                ResourceType resourceType = highlightedItem.getResourceType();
-                Tile tile = highlightedItem.getTile();
-                if (!isEnabled(resourceType) || !isOnActivePlane(tile))
-                {
-                    continue;
-                }
-
-                renderGroundItemTile(
-                    graphics,
-                    tile,
-                    colourFor(resourceType),
-                    stroke
-                );
-            }
-        }
-
         return null;
     }
 
@@ -125,14 +98,6 @@ public class TroubleBrewingHighlighterOverlay extends Overlay
             && object.getWorldView() != null
             && object.getWorldView().getId() == worldView.getId()
             && object.getPlane() == worldView.getPlane();
-    }
-
-    private boolean isOnActivePlane(Tile tile)
-    {
-        WorldView worldView = getActiveWorldView();
-        return worldView != null
-            && tile.getLocalLocation().getWorldView() == worldView.getId()
-            && tile.getPlane() == worldView.getPlane();
     }
 
     private boolean isOnActivePlane(NPC npc)
@@ -234,12 +199,6 @@ public class TroubleBrewingHighlighterOverlay extends Overlay
                     stroke
             );
         }
-    }
-
-    private void renderGroundItemTile(Graphics2D graphics, Tile tile, Color colour, Stroke stroke)
-    {
-        Polygon tilePolygon = Perspective.getCanvasTilePoly(client, tile.getLocalLocation());
-        renderShape(graphics, tilePolygon, colour, stroke);
     }
 
     private boolean renderShape(Graphics2D graphics, Shape shape, Color colour, Stroke stroke)
