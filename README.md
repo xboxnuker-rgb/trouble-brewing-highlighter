@@ -9,7 +9,8 @@ or automate any interaction.
 
 - Highlights relevant world objects, NPCs and ground items.
 - Highlights relevant inventory items and supplied tools in the tool selector.
-- Separates water, flower preparation, coloured water, hoppers, bark, bait,
+- Separates water, flower preparation, coloured water, bark preparation,
+  processed bark, hoppers, bait,
   collected sweetgrubs, bitternuts and finished-rum processing.
 - Provides independent category toggles and colours.
 - Provides configurable hulls, tiles, outline width and fill opacity.
