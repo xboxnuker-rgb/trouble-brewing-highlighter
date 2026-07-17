@@ -45,7 +45,7 @@ import net.runelite.client.ui.overlay.OverlayManager;
 @PluginDescriptor(
         name = "Trouble Brewing Highlighter",
         description = "Colour-coded highlights for Trouble Brewing resources and processing stations",
-        tags = {"trouble", "brewing", "minigame", "highlight", "helper"},
+        tags = {"trouble", "brewing", "minigame", "highlight", "helper"}
 )
 public class TroubleBrewingHighlighterPlugin extends Plugin
 {
