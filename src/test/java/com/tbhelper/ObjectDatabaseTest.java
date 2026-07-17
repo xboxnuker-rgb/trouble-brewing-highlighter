@@ -18,6 +18,8 @@ public class ObjectDatabaseTest
             ObjectDatabase.getObject(ObjectID.BREW_COLOUR_WATER_RED_SIGN));
         assertEquals(ResourceType.HOPPERS, ObjectDatabase.getObject(ObjectID.BREW_HOPPER_RED));
         assertEquals(ResourceType.HOPPERS, ObjectDatabase.getObject(ObjectID.BREW_HOPPER_BLUE));
+        assertEquals(ResourceType.PROCESSED_BARK,
+            ObjectDatabase.getObject(ObjectID.BREW_BARK_SIGN));
         assertEquals(ResourceType.RUM, ObjectDatabase.getObject(ObjectID.BREW_CONVEYER_BELT));
         assertEquals(ResourceType.RUM, ObjectDatabase.getObject(ObjectID.BREW_CRATE_RED));
     }
@@ -36,6 +38,11 @@ public class ObjectDatabaseTest
         assertEquals(ResourceType.COLOURED_WATER, ObjectDatabase.getItem(ItemID.BREW_BOWL_RED));
         assertEquals(ResourceType.BAIT, ObjectDatabase.getItem(ItemID.RAW_RAT_MEAT));
         assertEquals(ResourceType.GRUBS, ObjectDatabase.getItem(ItemID.BREW_SWEETGRUBS));
+        assertEquals(ResourceType.BARK, ObjectDatabase.getItem(ItemID.BREW_SCRAPEY_LOGS));
+        assertEquals(ResourceType.BARK, ObjectDatabase.getItem(ItemID.BRONZE_AXE));
+        assertEquals(ResourceType.BARK, ObjectDatabase.getItem(ItemID.KNIFE));
+        assertEquals(ResourceType.PROCESSED_BARK,
+            ObjectDatabase.getItem(ItemID.BREW_SCRAPEY_BARK));
         assertEquals(ResourceType.RUM, ObjectDatabase.getItem(ItemID.BREW_RED_RUM));
     }
 
