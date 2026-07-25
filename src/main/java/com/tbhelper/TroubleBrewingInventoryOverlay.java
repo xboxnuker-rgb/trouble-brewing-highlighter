@@ -17,6 +17,7 @@ import net.runelite.client.ui.overlay.WidgetItemOverlay;
 /** Draws the same category colours over matching Trouble Brewing inventory items. */
 public class TroubleBrewingInventoryOverlay extends WidgetItemOverlay
 {
+    private static final long DAMAGE_REPAIR_FLASH_MS = 500L;
     private final Client client;
     private final TroubleBrewingHighlighterPlugin plugin;
     private final TroubleBrewingHighlighterConfig config;
@@ -47,10 +48,14 @@ public class TroubleBrewingInventoryOverlay extends WidgetItemOverlay
         }
 
         renderToolWidget(graphics, InterfaceID.BrewTools.BUCKET_MODEL1, ResourceType.WATER);
+        renderToolWidget(graphics, InterfaceID.BrewTools.TINDERBOX_MODEL1, ResourceType.BOILER_FUEL);
         renderToolWidget(graphics, InterfaceID.BrewTools.AXE_MODEL1, ResourceType.BARK);
         renderToolWidget(graphics, InterfaceID.BrewTools.KNIFE_MODEL1, ResourceType.BARK);
         renderToolWidget(graphics, InterfaceID.BrewTools.BOWL_MODEL1, ResourceType.FLOWERS);
         renderToolWidget(graphics, InterfaceID.BrewTools.MEAT_MODEL1, ResourceType.BAIT);
+        renderToolWidget(graphics, InterfaceID.BrewTools.BAMBOO_MODEL1, ResourceType.DAMAGE_REPAIR );
+        renderToolWidget(graphics, InterfaceID.BrewTools.BRIDGE_MODEL1, ResourceType.DAMAGE_REPAIR);
+        renderToolWidget(graphics, InterfaceID.BrewTools.PATCH_MODEL1, ResourceType.DAMAGE_REPAIR);
         return dimension;
     }
 
@@ -117,6 +122,11 @@ public class TroubleBrewingInventoryOverlay extends WidgetItemOverlay
         graphics.setColor(oldColor);
     }
 
+    private boolean isDamageRepairFlashOn()
+    {
+        return (System.currentTimeMillis() / DAMAGE_REPAIR_FLASH_MS) % 2L == 0L;
+    }
+
     private boolean isEnabled(ResourceType resourceType)
     {
         switch (resourceType)
@@ -127,6 +137,8 @@ public class TroubleBrewingInventoryOverlay extends WidgetItemOverlay
                 return config.showColouredWater();
             case HOPPERS:
                 return config.showHoppers();
+            case BOILER_FUEL:
+                return config.showBoilerFuel();
             case BARK:
                 return config.showBark();
             case PROCESSED_BARK:
@@ -139,6 +151,10 @@ public class TroubleBrewingInventoryOverlay extends WidgetItemOverlay
                 return config.showFlowers();
             case BITTERNUTS:
                 return config.showBitternuts();
+            case BITTERNUTS_FINAL:
+                return config.showBitternutsFinal();
+            case DAMAGE_REPAIR:
+                return config.showDamageRepair() && isDamageRepairFlashOn();
             case RUM:
                 return config.showRum();
             default:
@@ -156,6 +172,8 @@ public class TroubleBrewingInventoryOverlay extends WidgetItemOverlay
                 return config.colouredWaterColor();
             case HOPPERS:
                 return config.hopperColor();
+            case BOILER_FUEL:
+                return config.boilerFuelColour();
             case BARK:
                 return config.barkColor();
             case PROCESSED_BARK:
@@ -168,6 +186,10 @@ public class TroubleBrewingInventoryOverlay extends WidgetItemOverlay
                 return config.flowerColor();
             case BITTERNUTS:
                 return config.bitternutColor();
+            case BITTERNUTS_FINAL:
+                return config.bitternutFinalColor();
+            case DAMAGE_REPAIR:
+                return config.damageRepairColour();
             case RUM:
                 return config.rumColor();
             default:

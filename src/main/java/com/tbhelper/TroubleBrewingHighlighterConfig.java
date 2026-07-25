@@ -111,7 +111,16 @@ public interface TroubleBrewingHighlighterConfig extends Config
     }
 
     @ConfigItem(
-        position = 3,
+            position = 3,
+            keyName = "showBoilerFuel",
+            name = "Boiler Fuel",
+            description = "Highlight logs, tinderboxes, log stores and all three boilers",
+            section = resourceSection
+    )
+    default boolean showBoilerFuel() { return true; }
+
+    @ConfigItem(
+        position = 4,
         keyName = "showBark",
         name = "Bark Preparation",
         description = "Highlight Scrapey trees, logs, knives and the supplied bronze axe",
@@ -123,7 +132,7 @@ public interface TroubleBrewingHighlighterConfig extends Config
     }
 
     @ConfigItem(
-        position = 4,
+        position = 5,
         keyName = "showProcessedBark",
         name = "Processed Scrapey Bark",
         description = "Highlight processed Scrapey bark and its upstairs painting",
@@ -135,7 +144,7 @@ public interface TroubleBrewingHighlighterConfig extends Config
     }
 
     @ConfigItem(
-        position = 5,
+        position = 6,
         keyName = "showBait",
         name = "Sweetgrub Bait",
         description = "Highlight usable sweetgrub mounds and raw rat meat",
@@ -147,7 +156,7 @@ public interface TroubleBrewingHighlighterConfig extends Config
     }
 
     @ConfigItem(
-        position = 6,
+        position = 7,
         keyName = "showGrubs",
         name = "Collected Sweetgrubs",
         description = "Highlight collected sweetgrubs",
@@ -159,7 +168,7 @@ public interface TroubleBrewingHighlighterConfig extends Config
     }
 
     @ConfigItem(
-        position = 7,
+        position = 8,
         keyName = "showFlowers",
         name = "Flowers, Bowls & Kettle",
         description = "Highlight flowers, ordinary bowls and the flower kettle",
@@ -171,7 +180,7 @@ public interface TroubleBrewingHighlighterConfig extends Config
     }
 
     @ConfigItem(
-        position = 8,
+        position = 9,
         keyName = "showBitternuts",
         name = "Bitternuts",
         description = "Highlight bitternut trees, monkeys and collected bitternuts",
@@ -183,7 +192,31 @@ public interface TroubleBrewingHighlighterConfig extends Config
     }
 
     @ConfigItem(
-        position = 9,
+        position = 10,
+        keyName = "showBitternutsFinal",
+        name = "Bitternuts Final",
+        description = "Highlight bitternuts and intended hopper",
+        section = resourceSection
+    )
+    default boolean showBitternutsFinal()
+    {
+        return true;
+    }
+
+    @ConfigItem(
+            position = 11,
+            keyName = "showDamageRepair",
+            name = "Damage & Repair",
+            description = "Highlight burning, damaged and destroyed structures, plus their repair materials",
+            section = resourceSection
+    )
+    default boolean showDamageRepair()
+    {
+        return true;
+    }
+
+    @ConfigItem(
+        position = 12,
         keyName = "showRum",
         name = "Finished Rum",
         description = "Highlight bottle machines, conveyors, rum crates and finished rum",
@@ -195,7 +228,7 @@ public interface TroubleBrewingHighlighterConfig extends Config
     }
 
     @ConfigSection(
-        name = "Colours",
+        name = "Colours (Resetting plugin will restore intended highlights)",
         description = "Highlight colours",
         position = 2
     )
@@ -222,7 +255,7 @@ public interface TroubleBrewingHighlighterConfig extends Config
     )
     default Color colouredWaterColor()
     {
-        return new Color(170, 70, 255);
+        return new Color(187, 70, 255);
     }
 
     @ConfigItem(
@@ -234,11 +267,20 @@ public interface TroubleBrewingHighlighterConfig extends Config
     )
     default Color hopperColor()
     {
-        return new Color(0, 190, 180);
+        return new Color(0, 71, 69);
     }
 
     @ConfigItem(
-        position = 3,
+            position = 3,
+            keyName = "boilerFuelColour",
+            name = "Boiler Fuel",
+            description = "Colour used for logs, tinderboxes, the log store and boilers",
+            section = colourSection
+    )
+    default Color boilerFuelColour() { return new Color(73, 19, 1); }
+
+    @ConfigItem(
+        position = 4,
         keyName = "barkColor",
         name = "Bark Preparation",
         description = "Scrapey tree, logs, knife and axe highlight colour",
@@ -246,11 +288,11 @@ public interface TroubleBrewingHighlighterConfig extends Config
     )
     default Color barkColor()
     {
-        return new Color(139, 69, 19);
+        return new Color(142, 81, 52);
     }
 
     @ConfigItem(
-        position = 4,
+        position = 5,
         keyName = "processedBarkColor",
         name = "Processed Scrapey Bark",
         description = "Processed Scrapey bark and painting highlight colour",
@@ -262,7 +304,7 @@ public interface TroubleBrewingHighlighterConfig extends Config
     }
 
     @ConfigItem(
-        position = 5,
+        position = 6,
         keyName = "baitColor",
         name = "Sweetgrub Bait",
         description = "Raw rat meat and usable mound highlight colour",
@@ -274,7 +316,7 @@ public interface TroubleBrewingHighlighterConfig extends Config
     }
 
     @ConfigItem(
-        position = 6,
+        position = 7,
         keyName = "grubColor",
         name = "Sweetgrubs",
         description = "Sweetgrub-route highlight colour",
@@ -282,11 +324,11 @@ public interface TroubleBrewingHighlighterConfig extends Config
     )
     default Color grubColor()
     {
-        return Color.YELLOW;
+        return new Color(247, 255, 0);
     }
 
     @ConfigItem(
-        position = 7,
+        position = 8,
         keyName = "flowerColor",
         name = "Flowers, Bowls & Kettle",
         description = "Flower, ordinary-bowl and kettle highlight colour",
@@ -298,19 +340,42 @@ public interface TroubleBrewingHighlighterConfig extends Config
     }
 
     @ConfigItem(
-        position = 8,
+        position = 9,
         keyName = "bitternutColor",
         name = "Bitternuts",
         description = "Bitternut highlight colour",
         section = colourSection
     )
-    default Color bitternutColor()
-    {
-        return Color.ORANGE;
+    default Color bitternutColor() {
+        return new Color(74, 0, 154);
     }
 
     @ConfigItem(
-        position = 9,
+        position = 10,
+        keyName = "bitternutFinalColor",
+        name = "Finished Bitternuts",
+        description = "Colour used for the collected bitternut and its hopper sign",
+        section = colourSection
+    )
+    default Color bitternutFinalColor()
+    {
+        return new Color(90, 255, 255);
+    }
+
+    @ConfigItem(
+        position = 11,
+        keyName = "damageRepairColour",
+        name = "Damage Repair",
+        description = "Highlights all things needing repair",
+        section = colourSection
+    )
+    default Color damageRepairColour()
+    {
+        return new Color(255, 108, 0);
+    }
+
+    @ConfigItem(
+        position = 12,
         keyName = "rumColor",
         name = "Finished Rum",
         description = "Finished-rum highlight colour",
@@ -318,6 +383,6 @@ public interface TroubleBrewingHighlighterConfig extends Config
     )
     default Color rumColor()
     {
-        return Color.LIGHT_GRAY;
+        return new Color(186, 186, 186);
     }
 }

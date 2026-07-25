@@ -22,6 +22,7 @@ import net.runelite.client.ui.overlay.OverlayPosition;
 
 public class TroubleBrewingHighlighterOverlay extends Overlay
 {
+    private static final long DAMAGE_REPAIR_FLASH_MS = 500L;
     private final Client client;
     private final TroubleBrewingHighlighterPlugin plugin;
     private final TroubleBrewingHighlighterConfig config;
@@ -216,6 +217,11 @@ public class TroubleBrewingHighlighterOverlay extends Overlay
         return true;
     }
 
+    private boolean isDamageRepairFlashOn()
+    {
+        return (System.currentTimeMillis() / DAMAGE_REPAIR_FLASH_MS) % 2L == 0L;
+    }
+
     private boolean isEnabled(ResourceType resourceType)
     {
         switch (resourceType)
@@ -226,6 +232,8 @@ public class TroubleBrewingHighlighterOverlay extends Overlay
                 return config.showColouredWater();
             case HOPPERS:
                 return config.showHoppers();
+            case BOILER_FUEL:
+                return config.showBoilerFuel();
             case BARK:
                 return config.showBark();
             case PROCESSED_BARK:
@@ -238,6 +246,10 @@ public class TroubleBrewingHighlighterOverlay extends Overlay
                 return config.showFlowers();
             case BITTERNUTS:
                 return config.showBitternuts();
+            case BITTERNUTS_FINAL:
+                return config.showBitternutsFinal();
+            case DAMAGE_REPAIR:
+                return config.showDamageRepair() && isDamageRepairFlashOn();
             case RUM:
                 return config.showRum();
             default:
@@ -255,6 +267,8 @@ public class TroubleBrewingHighlighterOverlay extends Overlay
                 return config.colouredWaterColor();
             case HOPPERS:
                 return config.hopperColor();
+            case BOILER_FUEL:
+                return config.boilerFuelColour();
             case BARK:
                 return config.barkColor();
             case PROCESSED_BARK:
@@ -267,6 +281,10 @@ public class TroubleBrewingHighlighterOverlay extends Overlay
                 return config.flowerColor();
             case BITTERNUTS:
                 return config.bitternutColor();
+            case BITTERNUTS_FINAL:
+                return config.bitternutFinalColor();
+            case DAMAGE_REPAIR:
+                return config.damageRepairColour();
             case RUM:
                 return config.rumColor();
             default:

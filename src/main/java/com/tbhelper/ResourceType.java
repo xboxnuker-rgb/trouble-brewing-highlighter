@@ -5,11 +5,14 @@ public enum ResourceType
     WATER,
     COLOURED_WATER,
     HOPPERS,
+    BOILER_FUEL,
     BARK,
     PROCESSED_BARK,
     BAIT,
     GRUBS,
     FLOWERS,
     BITTERNUTS,
-    RUM
+    BITTERNUTS_FINAL,
+    RUM,
+    DAMAGE_REPAIR
 }
