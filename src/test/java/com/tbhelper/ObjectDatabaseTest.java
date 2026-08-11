@@ -46,12 +46,12 @@ public class ObjectDatabaseTest
 
         // Team conveyors are highlighted only while actively carrying rum.
         assertEquals(
-                ResourceType.RUM,
+                ResourceType.CONVEYOR,
                 ObjectDatabase.getObject(ObjectID.BREW_RED_CONVEYOR_1)
         );
 
         assertEquals(
-                ResourceType.RUM,
+                ResourceType.CONVEYOR,
                 ObjectDatabase.getObject(ObjectID.BREW_BLUE_CONVEYOR_1)
         );
 
@@ -64,7 +64,7 @@ public class ObjectDatabaseTest
                 ObjectDatabase.getObject(ObjectID.BREW_CONVEYER_BELT)
         );
 
-        // Finished-rum collection crates remain part of the rum route.
+        // Finished-rum collection crates share the neutral processing route.
         assertEquals(
                 ResourceType.HOPPERS,
                 ObjectDatabase.getObject(ObjectID.BREW_CRATE_RED)
