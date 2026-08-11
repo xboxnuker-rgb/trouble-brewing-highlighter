@@ -2,21 +2,40 @@
 
 A passive RuneLite overlay that colour-codes the resource routes, tools,
 ingredients and processing stations used in the Trouble Brewing minigame.
-It focuses on finding and following each brewing route; it does not track score
-or automate any interaction.
+It focuses on finding and following each brewing route while showing cached
+Pieces of Eight totals and expected rewards; it does not present match-score
+breakdowns or automate any interaction.
 
 ## Features
 
-- Highlights relevant world objects, NPCs and ground items.
+- Highlights relevant world objects and NPCs.
 - Highlights relevant inventory items and supplied tools in the tool selector.
 - Separates water, flower preparation, coloured water, bark preparation,
   processed bark, hoppers, bait,
   collected sweetgrubs, bitternuts and finished-rum processing.
-- Provides independent category toggles and colours.
+- Provides independent category visibility, colour and flashing controls.
+- Flashes fires/damage and orange active conveyors by default; all other
+  flashing is opt-in.
 - Provides configurable hulls, tiles, outline width and fill opacity.
+- Shows the player's cached Pieces of Eight total near Trouble Brewing in a
+  standard overlay panel that can be repositioned with Alt-drag. During a
+  match, it also shows the expected new total from capped contribution and the
+  team's current rum score.
+- Passively highlights Careful (option 3) for the first monkey and Angry
+  (option 1) for its paired follow-up. The pair resets after completion or a
+  30-second gap, so repeated pairs remain in the correct order. Its default
+  outline colour matches the bitternut monkey/tree route.
+- Can prioritise the existing Join-crew option on San Fan and Fancy Dan.
 
-The plugin only draws overlays. It does not alter menus, inject input, send
-network requests, read or write files, or interact with the game.
+The plugin draws passive overlays and can reorder the existing Join-crew menu
+entry. It does not create menu actions, inject input, send network requests,
+read or write files, or interact with the game automatically.
+
+The Pieces of Eight value is cached rather than polled during rendering. It is
+refreshed when the value changes, when the reward shop opens, and when the
+end-of-game interface opens. The in-match expected total adds up to 100 points
+of personal contribution and 10 points for each bottle of rum on the player's
+team score.
 
 ## Development
 
