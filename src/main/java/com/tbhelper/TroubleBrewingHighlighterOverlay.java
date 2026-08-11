@@ -22,7 +22,7 @@ import net.runelite.client.ui.overlay.OverlayPosition;
 
 public class TroubleBrewingHighlighterOverlay extends Overlay
 {
-    private static final long DAMAGE_REPAIR_FLASH_MS = 500L;
+    private static final long FLASH_INTERVAL_MS = 500L;
     private final Client client;
     private final TroubleBrewingHighlighterPlugin plugin;
     private final TroubleBrewingHighlighterConfig config;
@@ -45,13 +45,14 @@ public class TroubleBrewingHighlighterOverlay extends Overlay
     public Dimension render(Graphics2D graphics)
     {
         Stroke stroke = new BasicStroke((float) config.outlineWidth());
+        boolean flashOn = isFlashOn();
 
         for (TroubleBrewingHighlighterPlugin.HighlightedObject highlightedObject
             : plugin.getHighlightedObjects())
         {
             ResourceType resourceType = highlightedObject.getResourceType();
             TileObject tileObject = highlightedObject.getTileObject();
-            if (!isEnabled(resourceType) || !isOnActivePlane(tileObject))
+            if (!isEnabled(resourceType, flashOn) || !isOnActivePlane(tileObject))
             {
                 continue;
             }
@@ -69,7 +70,7 @@ public class TroubleBrewingHighlighterOverlay extends Overlay
         {
             ResourceType resourceType = highlightedNpc.getResourceType();
             NPC npc = highlightedNpc.getNpc();
-            if (!isEnabled(resourceType) || !isOnActivePlane(npc))
+            if (!isEnabled(resourceType, flashOn) || !isOnActivePlane(npc))
             {
                 continue;
             }
@@ -217,12 +218,18 @@ public class TroubleBrewingHighlighterOverlay extends Overlay
         return true;
     }
 
-    private boolean isDamageRepairFlashOn()
+    private boolean isFlashOn()
     {
-        return (System.currentTimeMillis() / DAMAGE_REPAIR_FLASH_MS) % 2L == 0L;
+        return (System.currentTimeMillis() / FLASH_INTERVAL_MS) % 2L == 0L;
     }
 
-    private boolean isEnabled(ResourceType resourceType)
+    private boolean isEnabled(ResourceType resourceType, boolean flashOn)
+    {
+        return isCategoryEnabled(resourceType)
+            && (!isFlashing(resourceType) || flashOn);
+    }
+
+    private boolean isCategoryEnabled(ResourceType resourceType)
     {
         switch (resourceType)
         {
@@ -249,9 +256,47 @@ public class TroubleBrewingHighlighterOverlay extends Overlay
             case BITTERNUTS_FINAL:
                 return config.showBitternutsFinal();
             case DAMAGE_REPAIR:
-                return config.showDamageRepair() && isDamageRepairFlashOn();
+                return config.showDamageRepair();
+            case CONVEYOR:
             case RUM:
                 return config.showRum();
+            default:
+                return false;
+        }
+    }
+
+    private boolean isFlashing(ResourceType resourceType)
+    {
+        switch (resourceType)
+        {
+            case WATER:
+                return config.flashWater();
+            case COLOURED_WATER:
+                return config.flashColouredWater();
+            case HOPPERS:
+                return config.flashHoppers();
+            case BOILER_FUEL:
+                return config.flashBoilerFuel();
+            case BARK:
+                return config.flashBark();
+            case PROCESSED_BARK:
+                return config.flashProcessedBark();
+            case BAIT:
+                return config.flashBait();
+            case GRUBS:
+                return config.flashGrubs();
+            case FLOWERS:
+                return config.flashFlowers();
+            case BITTERNUTS:
+                return config.flashBitternuts();
+            case BITTERNUTS_FINAL:
+                return config.flashBitternutsFinal();
+            case DAMAGE_REPAIR:
+                return config.flashDamageRepair();
+            case CONVEYOR:
+                return config.flashConveyor();
+            case RUM:
+                return config.flashRum();
             default:
                 return false;
         }
@@ -285,6 +330,8 @@ public class TroubleBrewingHighlighterOverlay extends Overlay
                 return config.bitternutFinalColor();
             case DAMAGE_REPAIR:
                 return config.damageRepairColour();
+            case CONVEYOR:
+                return config.conveyorColor();
             case RUM:
                 return config.rumColor();
             default:

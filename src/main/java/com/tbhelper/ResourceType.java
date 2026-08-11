@@ -13,6 +13,7 @@ public enum ResourceType
     FLOWERS,
     BITTERNUTS,
     BITTERNUTS_FINAL,
+    CONVEYOR,
     RUM,
     DAMAGE_REPAIR
 }

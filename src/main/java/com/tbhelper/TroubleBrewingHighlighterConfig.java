@@ -34,7 +34,7 @@ public interface TroubleBrewingHighlighterConfig extends Config
         position = 1,
         keyName = "fillOpacity",
         name = "Fill Opacity",
-        description = "Opacity of filled hulls and ground-item tiles",
+        description = "Opacity of filled object, NPC and item highlights",
         section = displaySection
     )
     @Range(min = 0, max = 255)
@@ -59,7 +59,7 @@ public interface TroubleBrewingHighlighterConfig extends Config
         position = 3,
         keyName = "drawTile",
         name = "Draw Tile",
-        description = "Draw tiles beneath matched objects, NPCs and ground items",
+        description = "Draw tiles beneath matched objects and NPCs",
         section = displaySection
     )
     default boolean drawTile()
@@ -102,7 +102,7 @@ public interface TroubleBrewingHighlighterConfig extends Config
         position = 2,
         keyName = "showHoppers",
         name = "Team Hoppers",
-        description = "Highlight both teams' ingredient hoppers",
+        description = "Highlight both teams' ingredient hoppers and rum crates",
         section = resourceSection
     )
     default boolean showHoppers()
@@ -219,7 +219,7 @@ public interface TroubleBrewingHighlighterConfig extends Config
         position = 12,
         keyName = "showRum",
         name = "Finished Rum",
-        description = "Highlight bottle machines, conveyors, rum crates and finished rum",
+        description = "Highlight active bottle machines, conveyors and finished rum",
         section = resourceSection
     )
     default boolean showRum()
@@ -228,9 +228,239 @@ public interface TroubleBrewingHighlighterConfig extends Config
     }
 
     @ConfigSection(
+        name = "Flashing",
+        description = "Choose which enabled highlight categories flash",
+        position = 2
+    )
+    String flashingSection = "flashing";
+
+    @ConfigItem(
+        position = 0,
+        keyName = "flashWater",
+        name = "Flash Water & Buckets",
+        description = "Make water-route highlights flash",
+        section = flashingSection
+    )
+    default boolean flashWater()
+    {
+        return false;
+    }
+
+    @ConfigItem(
+        position = 1,
+        keyName = "flashColouredWater",
+        name = "Flash Coloured Water",
+        description = "Make coloured-water highlights flash",
+        section = flashingSection
+    )
+    default boolean flashColouredWater()
+    {
+        return false;
+    }
+
+    @ConfigItem(
+        position = 2,
+        keyName = "flashHoppers",
+        name = "Flash Team Hoppers",
+        description = "Make shared hopper and crate highlights flash",
+        section = flashingSection
+    )
+    default boolean flashHoppers()
+    {
+        return false;
+    }
+
+    @ConfigItem(
+        position = 3,
+        keyName = "flashBoilerFuel",
+        name = "Flash Boiler Fuel",
+        description = "Make boiler-fuel highlights flash",
+        section = flashingSection
+    )
+    default boolean flashBoilerFuel()
+    {
+        return false;
+    }
+
+    @ConfigItem(
+        position = 4,
+        keyName = "flashBark",
+        name = "Flash Bark Preparation",
+        description = "Make bark-preparation highlights flash",
+        section = flashingSection
+    )
+    default boolean flashBark()
+    {
+        return false;
+    }
+
+    @ConfigItem(
+        position = 5,
+        keyName = "flashProcessedBark",
+        name = "Flash Processed Bark",
+        description = "Make processed-bark highlights flash",
+        section = flashingSection
+    )
+    default boolean flashProcessedBark()
+    {
+        return false;
+    }
+
+    @ConfigItem(
+        position = 6,
+        keyName = "flashBait",
+        name = "Flash Sweetgrub Bait",
+        description = "Make sweetgrub-bait highlights flash",
+        section = flashingSection
+    )
+    default boolean flashBait()
+    {
+        return false;
+    }
+
+    @ConfigItem(
+        position = 7,
+        keyName = "flashGrubs",
+        name = "Flash Collected Sweetgrubs",
+        description = "Make collected-sweetgrub highlights flash",
+        section = flashingSection
+    )
+    default boolean flashGrubs()
+    {
+        return false;
+    }
+
+    @ConfigItem(
+        position = 8,
+        keyName = "flashFlowers",
+        name = "Flash Flowers & Kettle",
+        description = "Make flower-route highlights flash",
+        section = flashingSection
+    )
+    default boolean flashFlowers()
+    {
+        return false;
+    }
+
+    @ConfigItem(
+        position = 9,
+        keyName = "flashBitternuts",
+        name = "Flash Bitternut Route",
+        description = "Make monkey and bitternut-tree highlights flash",
+        section = flashingSection
+    )
+    default boolean flashBitternuts()
+    {
+        return false;
+    }
+
+    @ConfigItem(
+        position = 10,
+        keyName = "flashBitternutsFinal",
+        name = "Flash Finished Bitternuts",
+        description = "Make finished-bitternut highlights flash",
+        section = flashingSection
+    )
+    default boolean flashBitternutsFinal()
+    {
+        return false;
+    }
+
+    @ConfigItem(
+        position = 11,
+        keyName = "flashDamageRepair",
+        name = "Flash Fires & Damage",
+        description = "Make burning, damaged and destroyed structure highlights flash",
+        section = flashingSection
+    )
+    default boolean flashDamageRepair()
+    {
+        return true;
+    }
+
+    @ConfigItem(
+        position = 12,
+        keyName = "flashConveyor",
+        name = "Flash Active Conveyors",
+        description = "Make active rum conveyors flash",
+        section = flashingSection
+    )
+    default boolean flashConveyor()
+    {
+        return true;
+    }
+
+    @ConfigItem(
+        position = 13,
+        keyName = "flashRum",
+        name = "Flash Finished Rum",
+        description = "Make finished-rum items and bottle machines flash",
+        section = flashingSection
+    )
+    default boolean flashRum()
+    {
+        return false;
+    }
+
+    @ConfigSection(
+        name = "Helpers",
+        description = "Passive Trouble Brewing information and convenience helpers",
+        position = 3
+    )
+    String helperSection = "helpers";
+
+    @ConfigItem(
+        position = 0,
+        keyName = "showPiecesOfEight",
+        name = "Show Pieces of Eight",
+        description = "Show a movable Pieces of Eight total while near Trouble Brewing",
+        section = helperSection
+    )
+    default boolean showPiecesOfEight()
+    {
+        return true;
+    }
+
+    @ConfigItem(
+        position = 1,
+        keyName = "showMonkeyDialogueHelper",
+        name = "Monkey Dialogue Helper",
+        description = "Highlight Careful (option 3) first, then Angry (option 1) for paired bitternut monkeys",
+        section = helperSection
+    )
+    default boolean showMonkeyDialogueHelper()
+    {
+        return true;
+    }
+
+    @ConfigItem(
+        position = 2,
+        keyName = "preferJoinCrew",
+        name = "Prioritise Join-crew",
+        description = "Make Join-crew the default option on San Fan and Fancy Dan",
+        section = helperSection
+    )
+    default boolean preferJoinCrew()
+    {
+        return true;
+    }
+
+    @ConfigItem(
+        position = 3,
+        keyName = "monkeyDialogueColor",
+        name = "Monkey Dialogue Colour",
+        description = "Colour used to outline the recommended monkey dialogue option",
+        section = helperSection
+    )
+    default Color monkeyDialogueColor()
+    {
+        return new Color(74, 0, 154);
+    }
+
+    @ConfigSection(
         name = "Colours (Resetting plugin will restore intended highlights)",
         description = "Highlight colours",
-        position = 2
+        position = 4
     )
     String colourSection = "colours";
 
@@ -376,6 +606,18 @@ public interface TroubleBrewingHighlighterConfig extends Config
 
     @ConfigItem(
         position = 12,
+        keyName = "conveyorColor",
+        name = "Active Conveyors",
+        description = "Active-conveyor highlight colour",
+        section = colourSection
+    )
+    default Color conveyorColor()
+    {
+        return new Color(255, 108, 0);
+    }
+
+    @ConfigItem(
+        position = 13,
         keyName = "rumColor",
         name = "Finished Rum",
         description = "Finished-rum highlight colour",

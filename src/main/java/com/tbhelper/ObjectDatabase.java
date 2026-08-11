@@ -121,8 +121,8 @@ public final class ObjectDatabase
         register(objects, ObjectID.GAME_BREW_BOTTLE_MACHINE_SHAKE, ResourceType.RUM);
 
         // Conveyor only while a bottle is being processed.
-        register(objects, ObjectID.BREW_RED_CONVEYOR_1, ResourceType.RUM);
-        register(objects, ObjectID.BREW_BLUE_CONVEYOR_1, ResourceType.RUM);
+        register(objects, ObjectID.BREW_RED_CONVEYOR_1, ResourceType.CONVEYOR);
+        register(objects, ObjectID.BREW_BLUE_CONVEYOR_1, ResourceType.CONVEYOR);
         register(objects, ObjectID.BREW_CRATE_RED, ResourceType.HOPPERS);
         register(objects, ObjectID.BREW_CRATE_BLUE, ResourceType.HOPPERS);
 
@@ -130,7 +130,7 @@ public final class ObjectDatabase
 
         Map<Integer, ResourceType> items = new HashMap<>();
 
-        // Items used on the ground, in the inventory and in the tool selector.
+        // Items shown in the inventory and in the tool selector.
         register(items, ItemID.BUCKET_EMPTY, ResourceType.WATER);
         register(items, ItemID.BREW_BUCKET_DUMMY, ResourceType.WATER);
         register(items, ItemID.BUCKET_WATER, ResourceType.WATER);
