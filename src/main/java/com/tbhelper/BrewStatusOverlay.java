@@ -59,7 +59,7 @@ public class BrewStatusOverlay extends OverlayPanel
         String nextAction = plugin.getBrewStatusAction();
         panelComponent.getChildren().add(
             LineComponent.builder()
-                .left("DO THIS NEXT")
+                .left("POLLY SAYS")
                 .leftColor(HEADER_COLOR)
                 .right(nextAction)
                 .rightColor(actionColor(nextAction))
