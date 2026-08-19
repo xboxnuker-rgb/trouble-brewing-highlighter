@@ -38,6 +38,8 @@ public class TroubleBrewingHighlighterConfigTest
     public void enablesPassiveHelpersByDefault()
     {
         assertTrue(config.showPiecesOfEight());
+        assertTrue(config.showBrewStatus());
+        assertTrue(config.showStationAmounts());
         assertTrue(config.showMonkeyDialogueHelper());
         assertTrue(config.preferJoinCrew());
     }

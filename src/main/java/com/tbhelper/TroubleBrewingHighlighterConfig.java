@@ -111,11 +111,11 @@ public interface TroubleBrewingHighlighterConfig extends Config
     }
 
     @ConfigItem(
-            position = 3,
-            keyName = "showBoilerFuel",
-            name = "Boiler Fuel",
-            description = "Highlight logs, tinderboxes, log stores and all three boilers",
-            section = resourceSection
+        position = 3,
+        keyName = "showBoilerFuel",
+        name = "Boiler Fuel",
+        description = "Highlight boiler states, log stores and whichever boiler item is currently needed",
+        section = resourceSection
     )
     default boolean showBoilerFuel() { return true; }
 
@@ -207,7 +207,7 @@ public interface TroubleBrewingHighlighterConfig extends Config
             position = 11,
             keyName = "showDamageRepair",
             name = "Damage & Repair",
-            description = "Highlight burning, damaged and destroyed structures, plus their repair materials",
+            description = "Highlight active fires and structure-specific repair states and materials",
             section = resourceSection
     )
     default boolean showDamageRepair()
@@ -274,7 +274,7 @@ public interface TroubleBrewingHighlighterConfig extends Config
         position = 3,
         keyName = "flashBoilerFuel",
         name = "Flash Boiler Fuel",
-        description = "Make boiler-fuel highlights flash",
+        description = "Flash team boilers needing logs or lighting and the currently needed boiler item",
         section = flashingSection
     )
     default boolean flashBoilerFuel()
@@ -370,7 +370,7 @@ public interface TroubleBrewingHighlighterConfig extends Config
         position = 11,
         keyName = "flashDamageRepair",
         name = "Flash Fires & Damage",
-        description = "Make burning, damaged and destroyed structure highlights flash",
+        description = "Flash your team's active fires and only the repair materials currently needed",
         section = flashingSection
     )
     default boolean flashDamageRepair()
@@ -423,6 +423,30 @@ public interface TroubleBrewingHighlighterConfig extends Config
 
     @ConfigItem(
         position = 1,
+        keyName = "showBrewStatus",
+        name = "Show Brew Status",
+        description = "Show the movable production-guide window during a match",
+        section = helperSection
+    )
+    default boolean showBrewStatus()
+    {
+        return true;
+    }
+
+    @ConfigItem(
+        position = 2,
+        keyName = "showStationAmounts",
+        name = "Show Station Amounts",
+        description = "Show ingredient totals and icons at upstairs stations, inventory supply badges and boiler fuel guidance",
+        section = helperSection
+    )
+    default boolean showStationAmounts()
+    {
+        return true;
+    }
+
+    @ConfigItem(
+        position = 3,
         keyName = "showMonkeyDialogueHelper",
         name = "Monkey Dialogue Helper",
         description = "Highlight Careful (option 3) first, then Angry (option 1) for paired bitternut monkeys",
@@ -434,7 +458,7 @@ public interface TroubleBrewingHighlighterConfig extends Config
     }
 
     @ConfigItem(
-        position = 2,
+        position = 4,
         keyName = "preferJoinCrew",
         name = "Prioritise Join-crew",
         description = "Make Join-crew the default option on San Fan and Fancy Dan",
@@ -446,7 +470,7 @@ public interface TroubleBrewingHighlighterConfig extends Config
     }
 
     @ConfigItem(
-        position = 3,
+        position = 5,
         keyName = "monkeyDialogueColor",
         name = "Monkey Dialogue Colour",
         description = "Colour used to outline the recommended monkey dialogue option",
@@ -504,7 +528,7 @@ public interface TroubleBrewingHighlighterConfig extends Config
             position = 3,
             keyName = "boilerFuelColour",
             name = "Boiler Fuel",
-            description = "Colour used for logs, tinderboxes, the log store and boilers",
+            description = "Colour used for boiler states, logs, tinderboxes and the log store",
             section = colourSection
     )
     default Color boilerFuelColour() { return new Color(73, 19, 1); }
@@ -595,8 +619,8 @@ public interface TroubleBrewingHighlighterConfig extends Config
     @ConfigItem(
         position = 11,
         keyName = "damageRepairColour",
-        name = "Damage Repair",
-        description = "Highlights all things needing repair",
+        name = "Fire / Emergency",
+        description = "Active-fire, emergency-water and bridge-repair highlight colour",
         section = colourSection
     )
     default Color damageRepairColour()

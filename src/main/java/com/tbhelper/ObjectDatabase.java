@@ -37,72 +37,85 @@ public final class ObjectDatabase
         register(objects, ObjectID.BREW_BITTERNUT_TREE_FIGHT_BLUE_DEFEND, ResourceType.BITTERNUTS);
         register(objects, ObjectID.BREW_BITTERNUT_TREE_FIGHT_RED_DEFEND, ResourceType.BITTERNUTS);
 
-        // Damage and repair route - only burning, damaged or destroyed states.
+        // Active fires use the emergency-water route.
 
         // Red pipes.
-        register(objects, ObjectID.BREW_PIPES_RED_BURNING_1, ResourceType.DAMAGE_REPAIR);
-        register(objects, ObjectID.BREW_PIPES_RED_BURNING_2, ResourceType.DAMAGE_REPAIR);
-        register(objects, ObjectID.BREW_PIPES_RED_DAMAGED_1, ResourceType.DAMAGE_REPAIR);
-        register(objects, ObjectID.BREW_PIPES_RED_DAMAGED_2, ResourceType.DAMAGE_REPAIR);
-        register(objects, ObjectID.BREW_PIPES_RED_DESTROYED, ResourceType.DAMAGE_REPAIR);
+        register(objects, ObjectID.BREW_PIPES_RED_BURNING_1, ResourceType.ACTIVE_FIRE);
+        register(objects, ObjectID.BREW_PIPES_RED_BURNING_2, ResourceType.ACTIVE_FIRE);
+        register(objects, ObjectID.BREW_PIPES_RED_DAMAGED_1, ResourceType.PIPE_REPAIR);
+        register(objects, ObjectID.BREW_PIPES_RED_DAMAGED_2, ResourceType.PIPE_REPAIR);
+        register(objects, ObjectID.BREW_PIPES_RED_WET_1, ResourceType.PIPE_REPAIR);
+        register(objects, ObjectID.BREW_PIPES_RED_WET_2, ResourceType.PIPE_REPAIR);
+        register(objects, ObjectID.BREW_PIPES_RED_DESTROYED, ResourceType.PIPE_REPAIR);
 
         // Red hoppers.
-        register(objects, ObjectID.BREW_HOPPER_RED_BURNING_1, ResourceType.DAMAGE_REPAIR);
-        register(objects, ObjectID.BREW_HOPPER_RED_BURNING_2, ResourceType.DAMAGE_REPAIR);
-        register(objects, ObjectID.BREW_HOPPER_RED_DAMAGED_1, ResourceType.DAMAGE_REPAIR);
-        register(objects, ObjectID.BREW_HOPPER_RED_DAMAGED_2, ResourceType.DAMAGE_REPAIR);
-        register(objects, ObjectID.BREW_HOPPER_RED_DESTROYED, ResourceType.DAMAGE_REPAIR);
+        register(objects, ObjectID.BREW_HOPPER_RED_BURNING_1, ResourceType.ACTIVE_FIRE);
+        register(objects, ObjectID.BREW_HOPPER_RED_BURNING_2, ResourceType.ACTIVE_FIRE);
+        register(objects, ObjectID.BREW_HOPPER_RED_DAMAGED_1, ResourceType.LUMBER_REPAIR);
+        register(objects, ObjectID.BREW_HOPPER_RED_DAMAGED_2, ResourceType.LUMBER_REPAIR);
+        register(objects, ObjectID.BREW_HOPPER_RED_WET_1, ResourceType.LUMBER_REPAIR);
+        register(objects, ObjectID.BREW_HOPPER_RED_WET_2, ResourceType.LUMBER_REPAIR);
+        register(objects, ObjectID.BREW_HOPPER_RED_DESTROYED, ResourceType.LUMBER_REPAIR);
 
         // Red bridges.
-        register(objects, ObjectID.BREW_BRIDGE_RED_BURNING_1, ResourceType.DAMAGE_REPAIR);
-        register(objects, ObjectID.BREW_BRIDGE_RED_BURNING_2, ResourceType.DAMAGE_REPAIR);
+        register(objects, ObjectID.BREW_BRIDGE_RED_BURNING_1, ResourceType.ACTIVE_FIRE);
+        register(objects, ObjectID.BREW_BRIDGE_RED_BURNING_2, ResourceType.ACTIVE_FIRE);
         register(objects, ObjectID.BREW_BRIDGE_RED_DAMAGED_1, ResourceType.DAMAGE_REPAIR);
         register(objects, ObjectID.BREW_BRIDGE_RED_DAMAGED_2, ResourceType.DAMAGE_REPAIR);
+        register(objects, ObjectID.BREW_BRIDGE_RED_WET_1, ResourceType.DAMAGE_REPAIR);
+        register(objects, ObjectID.BREW_BRIDGE_RED_WET_2, ResourceType.DAMAGE_REPAIR);
         register(objects, ObjectID.BREW_BRIDGE_RED_DESTROYED, ResourceType.DAMAGE_REPAIR);
 
         // Blue pipes.
-        register(objects, ObjectID.BREW_PIPES_BLUE_BURNING_1, ResourceType.DAMAGE_REPAIR);
-        register(objects, ObjectID.BREW_PIPES_BLUE_BURNING_2, ResourceType.DAMAGE_REPAIR);
-        register(objects, ObjectID.BREW_PIPES_BLUE_DAMAGED_1, ResourceType.DAMAGE_REPAIR);
-        register(objects, ObjectID.BREW_PIPES_BLUE_DAMAGED_2, ResourceType.DAMAGE_REPAIR);
-        register(objects, ObjectID.BREW_PIPES_BLUE_DESTROYED, ResourceType.DAMAGE_REPAIR);
+        register(objects, ObjectID.BREW_PIPES_BLUE_BURNING_1, ResourceType.ACTIVE_FIRE);
+        register(objects, ObjectID.BREW_PIPES_BLUE_BURNING_2, ResourceType.ACTIVE_FIRE);
+        register(objects, ObjectID.BREW_PIPES_BLUE_DAMAGED_1, ResourceType.PIPE_REPAIR);
+        register(objects, ObjectID.BREW_PIPES_BLUE_DAMAGED_2, ResourceType.PIPE_REPAIR);
+        register(objects, ObjectID.BREW_PIPES_BLUE_WET_1, ResourceType.PIPE_REPAIR);
+        register(objects, ObjectID.BREW_PIPES_BLUE_WET_2, ResourceType.PIPE_REPAIR);
+        register(objects, ObjectID.BREW_PIPES_BLUE_DESTROYED, ResourceType.PIPE_REPAIR);
 
         // Blue hoppers.
-        register(objects, ObjectID.BREW_HOPPER_BLUE_BURNING_1, ResourceType.DAMAGE_REPAIR);
-        register(objects, ObjectID.BREW_HOPPER_BLUE_BURNING_2, ResourceType.DAMAGE_REPAIR);
-        register(objects, ObjectID.BREW_HOPPER_BLUE_DAMAGED_1, ResourceType.DAMAGE_REPAIR);
-        register(objects, ObjectID.BREW_HOPPER_BLUE_DAMAGED_2, ResourceType.DAMAGE_REPAIR);
-        register(objects, ObjectID.BREW_HOPPER_BLUE_DESTROYED, ResourceType.DAMAGE_REPAIR);
+        register(objects, ObjectID.BREW_HOPPER_BLUE_BURNING_1, ResourceType.ACTIVE_FIRE);
+        register(objects, ObjectID.BREW_HOPPER_BLUE_BURNING_2, ResourceType.ACTIVE_FIRE);
+        register(objects, ObjectID.BREW_HOPPER_BLUE_DAMAGED_1, ResourceType.LUMBER_REPAIR);
+        register(objects, ObjectID.BREW_HOPPER_BLUE_DAMAGED_2, ResourceType.LUMBER_REPAIR);
+        register(objects, ObjectID.BREW_HOPPER_BLUE_WET_1, ResourceType.LUMBER_REPAIR);
+        register(objects, ObjectID.BREW_HOPPER_BLUE_WET_2, ResourceType.LUMBER_REPAIR);
+        register(objects, ObjectID.BREW_HOPPER_BLUE_DESTROYED, ResourceType.LUMBER_REPAIR);
 
         // Blue bridges.
-        register(objects, ObjectID.BREW_BRIDGE_BLUE_BURNING_1, ResourceType.DAMAGE_REPAIR);
-        register(objects, ObjectID.BREW_BRIDGE_BLUE_BURNING_2, ResourceType.DAMAGE_REPAIR);
+        register(objects, ObjectID.BREW_BRIDGE_BLUE_BURNING_1, ResourceType.ACTIVE_FIRE);
+        register(objects, ObjectID.BREW_BRIDGE_BLUE_BURNING_2, ResourceType.ACTIVE_FIRE);
         register(objects, ObjectID.BREW_BRIDGE_BLUE_DAMAGED_1, ResourceType.DAMAGE_REPAIR);
         register(objects, ObjectID.BREW_BRIDGE_BLUE_DAMAGED_2, ResourceType.DAMAGE_REPAIR);
+        register(objects, ObjectID.BREW_BRIDGE_BLUE_WET_1, ResourceType.DAMAGE_REPAIR);
+        register(objects, ObjectID.BREW_BRIDGE_BLUE_WET_2, ResourceType.DAMAGE_REPAIR);
         register(objects, ObjectID.BREW_BRIDGE_BLUE_DESTROYED, ResourceType.DAMAGE_REPAIR);
 
         // Other damaged production resources.
-        register(objects, ObjectID.BREW_WATER_PUMP_FIRE, ResourceType.DAMAGE_REPAIR);
-        register(objects, ObjectID.BREW_WATER_PUMP_DAMAGED, ResourceType.DAMAGE_REPAIR);
-        register(objects, ObjectID.BREW_FLOWERS_RED_FIRE, ResourceType.DAMAGE_REPAIR);
-        register(objects, ObjectID.BREW_FLOWERS_BLUE_FIRE, ResourceType.DAMAGE_REPAIR);
-        register(objects, ObjectID.BREW_JUNGLE_TREE_1_FIRE, ResourceType.DAMAGE_REPAIR);
-        register(objects, ObjectID.BREW_JUNGLE_TREE_2_FIRE, ResourceType.DAMAGE_REPAIR);
-        register(objects, ObjectID.BREW_JUNGLE_TREE_3_FIRE, ResourceType.DAMAGE_REPAIR);
+        register(objects, ObjectID.BREW_WATER_PUMP_FIRE, ResourceType.ACTIVE_FIRE);
+        register(objects, ObjectID.BREW_WATER_PUMP_DAMAGED, ResourceType.PIPE_REPAIR);
+        register(objects, ObjectID.BREW_FLOWERS_RED_FIRE, ResourceType.ACTIVE_FIRE);
+        register(objects, ObjectID.BREW_FLOWERS_BLUE_FIRE, ResourceType.ACTIVE_FIRE);
+        register(objects, ObjectID.BREW_JUNGLE_TREE_1_FIRE, ResourceType.ACTIVE_FIRE);
+        register(objects, ObjectID.BREW_JUNGLE_TREE_2_FIRE, ResourceType.ACTIVE_FIRE);
+        register(objects, ObjectID.BREW_JUNGLE_TREE_3_FIRE, ResourceType.ACTIVE_FIRE);
 
-        // Boiler fuel route.
-        register(objects, ObjectID.BREW_STILL_BOILER, ResourceType.BOILER_FUEL);
-        register(objects, ObjectID.BREW_STILL_BOILER_MIRROR, ResourceType.BOILER_FUEL);
-        register(objects, ObjectID.BREW_STILL_BOILER_FIRE, ResourceType.BOILER_FUEL);
-        register(objects, ObjectID.BREW_STILL_BOILER_FIRE_MIRROR, ResourceType.BOILER_FUEL);
-        register(objects, ObjectID.BREW_STILL_BOILER_LOGS, ResourceType.BOILER_FUEL);
-        register(objects, ObjectID.BREW_STILL_BOILER_LOGS_MIRROR, ResourceType.BOILER_FUEL);
-        register(objects, ObjectID.BREW_STILL_BOILER_CORNER, ResourceType.BOILER_FUEL);
-        register(objects, ObjectID.BREW_STILL_BOILER_CORNER_FIRE, ResourceType.BOILER_FUEL);
-        register(objects, ObjectID.BREW_STILL_BOILER_CORNER_LOGS, ResourceType.BOILER_FUEL);
-        register(objects, ObjectID.BREW_STILL_BOILER_CORNER_MIRROR, ResourceType.BOILER_FUEL);
-        register(objects, ObjectID.BREW_STILL_BOILER_CORNER_FIRE_MIRROR, ResourceType.BOILER_FUEL);
-        register(objects, ObjectID.BREW_STILL_BOILER_CORNER_LOGS_MIRROR, ResourceType.BOILER_FUEL);
+        // Boiler fuel route. Empty and loaded-but-unlit boilers are separate
+        // states so only the item currently needed receives attention.
+        register(objects, ObjectID.BREW_STILL_BOILER, ResourceType.BOILER_EMPTY);
+        register(objects, ObjectID.BREW_STILL_BOILER_MIRROR, ResourceType.BOILER_EMPTY);
+        register(objects, ObjectID.BREW_STILL_BOILER_CORNER, ResourceType.BOILER_EMPTY);
+        register(objects, ObjectID.BREW_STILL_BOILER_CORNER_MIRROR, ResourceType.BOILER_EMPTY);
+        register(objects, ObjectID.BREW_STILL_BOILER_LOGS, ResourceType.BOILER_UNLIT);
+        register(objects, ObjectID.BREW_STILL_BOILER_LOGS_MIRROR, ResourceType.BOILER_UNLIT);
+        register(objects, ObjectID.BREW_STILL_BOILER_CORNER_LOGS, ResourceType.BOILER_UNLIT);
+        register(objects, ObjectID.BREW_STILL_BOILER_CORNER_LOGS_MIRROR, ResourceType.BOILER_UNLIT);
+        register(objects, ObjectID.BREW_STILL_BOILER_FIRE, ResourceType.BOILER_ACTIVE);
+        register(objects, ObjectID.BREW_STILL_BOILER_FIRE_MIRROR, ResourceType.BOILER_ACTIVE);
+        register(objects, ObjectID.BREW_STILL_BOILER_CORNER_FIRE, ResourceType.BOILER_ACTIVE);
+        register(objects, ObjectID.BREW_STILL_BOILER_CORNER_FIRE_MIRROR, ResourceType.BOILER_ACTIVE);
         register(objects, ObjectID.BREW_LOG_STORE, ResourceType.BOILER_FUEL);
 
         // Ingredient picture frames.
@@ -158,8 +171,8 @@ public final class ObjectDatabase
         register(items, ItemID.TINDERBOX, ResourceType.BOILER_FUEL);  // Tinderbox
 
         // Repair materials used on damaged structures.
-        register(items, ItemID.BREW_PIPE_SECTION, ResourceType.DAMAGE_REPAIR);
-        register(items, ItemID.BREW_LUMBER_PATCH, ResourceType.DAMAGE_REPAIR);
+        register(items, ItemID.BREW_PIPE_SECTION, ResourceType.PIPE_REPAIR);
+        register(items, ItemID.BREW_LUMBER_PATCH, ResourceType.LUMBER_REPAIR);
         register(items, ItemID.BREW_BRIDGE_SECTION, ResourceType.DAMAGE_REPAIR);
 
         ITEMS = Collections.unmodifiableMap(items);

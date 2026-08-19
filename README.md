@@ -14,13 +14,38 @@ breakdowns or automate any interaction.
   processed bark, hoppers, bait,
   collected sweetgrubs, bitternuts and finished-rum processing.
 - Provides independent category visibility, colour and flashing controls.
-- Flashes fires/damage and orange active conveyors by default; all other
-  flashing is opt-in.
+- Shows a visually distinct, Alt-movable Brew Status panel during matches. It
+  gives a plain-language next action, colour-coded supply targets for the
+  remaining capacity of a 29-rum match,
+  the lowest boiler fuel, current rum-output state, a collection-unlock warning
+  when ingredients are needed, a passive cycle estimate and the remaining
+  match time. Independently configurable
+  station labels show remaining-run supply totals above the player's upstairs
+  hopper signs with their matching item icons, and fuel guidance above the
+  three team boilers. Loaded, unlit boilers also show a tinderbox icon until
+  they are lit.
+- Makes boilers context-aware: empty and loaded-but-unlit boilers are tracked
+  separately, and inventory logs or a tinderbox are highlighted only while
+  that item is useful. Optional boiler flashing affects actionable boilers for
+  the player's team; active and opposing-team boilers remain steady.
+- Flashes active fires and orange active conveyors by default. A filled water
+  bucket switches to the orange emergency colour while the native Trouble
+  Brewing HUD reports a fire in the player's team base, including when that
+  structure is on the other floor. Bamboo pipes and lumber patches flash only
+  while their matching team pipe/water-pump or hopper repair count is present.
+  Opposing-team damage remains visible as a steady outline without triggering
+  emergency or repair flashing. Local-team fires show a water-bucket prompt;
+  extinguished damage shows the correct repair item and one remaining-parts
+  label per repair category. The label interprets the spawned progression
+  states as `3 → 2 → 1`, then disappears when the repair is complete instead
+  of displaying overlapping object-state numbers.
+- Uses the water-route colour for damaged pipes and water pumps, and the
+  hopper-route colour for damaged hoppers and lumber patches.
 - Provides configurable hulls, tiles, outline width and fill opacity.
 - Shows the player's cached Pieces of Eight total near Trouble Brewing in a
   standard overlay panel that can be repositioned with Alt-drag. During a
   match, it also shows the expected new total from capped contribution and the
-  team's current rum score.
+  rum bottles already produced by the player's team.
 - Passively highlights Careful (option 3) for the first monkey and Angry
   (option 1) for its paired follow-up. The pair resets after completion or a
   30-second gap, so repeated pairs remain in the correct order. Its default
@@ -30,12 +55,29 @@ breakdowns or automate any interaction.
 The plugin draws passive overlays and can reorder the existing Join-crew menu
 entry. It does not create menu actions, inject input, send network requests,
 read or write files, or interact with the game automatically.
+Ground items are deliberately not highlighted; production supplies are shown
+only in the inventory, tool selector and at their relevant world stations.
 
 The Pieces of Eight value is cached rather than polled during rendering. It is
 refreshed when the value changes, when the reward shop opens, and when the
 end-of-game interface opens. The in-match expected total adds up to 100 points
 of personal contribution and 10 points for each bottle of rum on the player's
 team score.
+
+The Brew Status panel is deliberately phrased for players who do not already
+know the minigame. Its supply targets subtract rum already made from the
+29-rum match capacity, then use 1 bitternut, 1 sweetgrub, 5 buckets, 3 coloured
+water and 1 bark per remaining rum. Zero stock is red, partial stock is orange
+and enough for the remaining run is green. Supply values, boiler counts, rum
+state and timer are cached once per game tick; rendering only formats those
+cached values. Its cycle time is an estimate started when the shared ingredient
+totals fall.
+
+The movable Brew Status window and the in-world station amounts have separate
+toggles. The window can therefore be hidden while retaining the hopper and
+boiler guidance. The same setting adds backed, colour-coded current/target
+badges to relevant production-supply items in the inventory; tools, repair
+materials, boiler fuel and rum remain uncluttered.
 
 ## Development
 
