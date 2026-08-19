@@ -66,13 +66,13 @@ public class BrewStatusOverlay extends OverlayPanel
                 .build()
         );
 
-        int remainingRums = plugin.getRemainingRums();
-        addSection("SUPPLIES FOR " + remainingRums + " RUM");
-        addSupply("Bitternuts", plugin.getTeamBitternuts(), remainingRums);
-        addSupply("Sweetgrubs", plugin.getTeamSweetgrubs(), remainingRums);
-        addSupply("Water buckets", plugin.getTeamBuckets(), remainingRums * 5);
-        addSupply("Coloured water", plugin.getTeamColouredWater(), remainingRums * 3);
-        addSupply("Scrapey bark", plugin.getTeamBark(), remainingRums);
+        int possibleRumsLeft = plugin.getPossibleRumsLeft();
+        addSection("SUPPLIES FOR " + possibleRumsLeft + " RUM");
+        addSupply("Bitternuts", plugin.getTeamBitternuts(), possibleRumsLeft);
+        addSupply("Sweetgrubs", plugin.getTeamSweetgrubs(), possibleRumsLeft);
+        addSupply("Water buckets", plugin.getTeamBuckets(), possibleRumsLeft * 5);
+        addSupply("Coloured water", plugin.getTeamColouredWater(), possibleRumsLeft * 3);
+        addSupply("Scrapey bark", plugin.getTeamBark(), possibleRumsLeft);
 
         addSection("PRODUCTION");
         int lowestBoilerLogs = plugin.getLowestBoilerLogCount();
@@ -100,6 +100,7 @@ public class BrewStatusOverlay extends OverlayPanel
             cycleSeconds < 0 ? "-" : cycleSeconds == 0 ? "Finishing" : "~" + cycleSeconds + " sec",
             cycleSeconds >= 0 ? SECTION_COLOR : MUTED_COLOR
         );
+        addLine("Possible rum left", Integer.toString(possibleRumsLeft), SECTION_COLOR);
         addLine("Time left", compactMatchTime(plugin.getMatchTime()), Color.WHITE);
 
         return super.render(graphics);
@@ -146,7 +147,9 @@ public class BrewStatusOverlay extends OverlayPanel
 
     private static Color actionColor(String action)
     {
-        if ("Collect rum".equals(action) || "Keep supplies flowing".equals(action))
+        if ("Collect rum".equals(action)
+            || "Keep supplies flowing".equals(action)
+            || "Run supplied".equals(action))
         {
             return GOOD_COLOR;
         }

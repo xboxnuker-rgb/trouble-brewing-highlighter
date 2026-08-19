@@ -123,44 +123,54 @@ public class TroubleBrewingInventoryOverlay extends WidgetItemOverlay
 
         int current;
         int perRum;
-        switch (resourceType)
+        if (itemId == ItemID.BREW_MONKEY)
         {
-            case WATER:
-                current = plugin.getTeamBuckets();
-                perRum = 5;
-                break;
-            case COLOURED_WATER:
-            case FLOWERS:
-                current = plugin.getTeamColouredWater();
-                perRum = 3;
-                break;
-            case BARK:
-                if (itemId == ItemID.BRONZE_AXE || itemId == ItemID.KNIFE)
-                {
+            // Preserve the plain monkey's route colour, but show the supply it
+            // is used to collect rather than the coloured-water total.
+            current = plugin.getTeamBitternuts();
+            perRum = 1;
+        }
+        else
+        {
+            switch (resourceType)
+            {
+                case WATER:
+                    current = plugin.getTeamBuckets();
+                    perRum = 5;
+                    break;
+                case COLOURED_WATER:
+                case FLOWERS:
+                    current = plugin.getTeamColouredWater();
+                    perRum = 3;
+                    break;
+                case BARK:
+                    if (itemId == ItemID.BRONZE_AXE || itemId == ItemID.KNIFE)
+                    {
+                        return;
+                    }
+                    current = plugin.getTeamBark();
+                    perRum = 1;
+                    break;
+                case PROCESSED_BARK:
+                    current = plugin.getTeamBark();
+                    perRum = 1;
+                    break;
+                case BAIT:
+                case GRUBS:
+                    current = plugin.getTeamSweetgrubs();
+                    perRum = 1;
+                    break;
+                case BITTERNUTS:
+                case BITTERNUTS_FINAL:
+                    current = plugin.getTeamBitternuts();
+                    perRum = 1;
+                    break;
+                default:
                     return;
-                }
-                current = plugin.getTeamBark();
-                perRum = 1;
-                break;
-            case PROCESSED_BARK:
-                current = plugin.getTeamBark();
-                perRum = 1;
-                break;
-            case BAIT:
-            case GRUBS:
-                current = plugin.getTeamSweetgrubs();
-                perRum = 1;
-                break;
-            case BITTERNUTS:
-            case BITTERNUTS_FINAL:
-                current = plugin.getTeamBitternuts();
-                perRum = 1;
-                break;
-            default:
-                return;
+            }
         }
 
-        int required = plugin.getRemainingRums() * perRum;
+        int required = plugin.getPossibleRumsLeft() * perRum;
         String text = current + "/" + required;
         Font oldFont = graphics.getFont();
         Color oldColor = graphics.getColor();

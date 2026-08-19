@@ -6,6 +6,18 @@ It focuses on finding and following each brewing route while showing cached
 Pieces of Eight totals and expected rewards; it does not present match-score
 breakdowns or automate any interaction.
 
+Current version: **1.4.1**.
+
+## Version 1.4.1
+
+- Makes the remaining-rum and supply targets time-aware, including active brew
+  cycles and a five-second collection/deposit buffer at the end of a match.
+- Uses those targets consistently in the Brew Status panel, upstairs station
+  labels and inventory badges; inventory monkeys now show the bitternut total
+  they help collect.
+- Temporarily hides a usable sweetgrub mound highlight while its nearby swarm
+  is active and restores it when the swarm despawns.
+
 ## Features
 
 - Highlights relevant world objects and NPCs.
@@ -13,13 +25,17 @@ breakdowns or automate any interaction.
 - Separates water, flower preparation, coloured water, bark preparation,
   processed bark, hoppers, bait,
   collected sweetgrubs, bitternuts and finished-rum processing.
+- Hides a usable sweetgrub mound's bait highlight while its nearby swarm is
+  active, then restores the highlight when the swarm despawns.
 - Provides independent category visibility, colour and flashing controls.
 - Shows a visually distinct, Alt-movable Brew Status panel during matches. It
   gives a plain-language next action, colour-coded supply targets for the
-  remaining capacity of a 29-rum match,
+  amount of rum that can still finish before the match ends,
   the lowest boiler fuel, current rum-output state, a collection-unlock warning
-  when ingredients are needed, a passive cycle estimate and the remaining
-  match time. Independently configurable
+  when ingredients are needed, a passive cycle estimate, possible rum left and
+  the remaining match time. Its next action prioritises the least-stocked
+  required ingredient instead of reporting that the system is merely brewing.
+  Independently configurable
   station labels show remaining-run supply totals above the player's upstairs
   hopper signs with their matching item icons, and fuel guidance above the
   three team boilers. Loaded, unlit boilers also show a tinderbox icon until
@@ -60,24 +76,29 @@ only in the inventory, tool selector and at their relevant world stations.
 
 The Pieces of Eight value is cached rather than polled during rendering. It is
 refreshed when the value changes, when the reward shop opens, and when the
-end-of-game interface opens. The in-match expected total adds up to 100 points
-of personal contribution and 10 points for each bottle of rum on the player's
-team score.
+end-of-game interface opens. The in-match expected value is derived from the
+cached native totals: up to 100 personal-contribution points plus 10 for each
+bottle in the player's team rum total.
 
 The Brew Status panel is deliberately phrased for players who do not already
-know the minigame. Its supply targets subtract rum already made from the
-29-rum match capacity, then use 1 bitternut, 1 sweetgrub, 5 buckets, 3 coloured
-water and 1 bark per remaining rum. Zero stock is red, partial stock is orange
-and enough for the remaining run is green. Supply values, boiler counts, rum
-state and timer are cached once per game tick; rendering only formats those
-cached values. Its cycle time is an estimate started when the shared ingredient
-totals fall.
+know the minigame. Its supply target starts at the 29-rum theoretical cap, then
+uses the native match timer and the estimated 64-tick production cycle to lower
+that target as cycles become impossible to finish. A partially completed active
+cycle is included using its own remaining time. A fixed five-second end buffer
+allows the final rum to be collected and deposited. The result is capped at 29
+minus the rum already made, then uses 1 bitternut, 1 sweetgrub, 5 buckets,
+3 coloured water and 1 bark per possible rum. Zero stock is red, partial stock
+is orange and enough for the time-limited run is green. Supply values, boiler
+counts, rum state and timer are cached once per game tick; rendering only
+formats those cached values. Its cycle time is an estimate started when the
+shared ingredient totals fall.
 
 The movable Brew Status window and the in-world station amounts have separate
 toggles. The window can therefore be hidden while retaining the hopper and
 boiler guidance. The same setting adds backed, colour-coded current/target
 badges to relevant production-supply items in the inventory; tools, repair
-materials, boiler fuel and rum remain uncluttered.
+materials, boiler fuel and rum remain uncluttered. Inventory monkeys retain
+their route colour while their badge shows the team bitternut total and target.
 
 ## Development
 

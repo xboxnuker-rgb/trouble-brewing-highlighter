@@ -83,6 +83,10 @@ public class TroubleBrewingHighlighterOverlay extends Overlay
             {
                 continue;
             }
+            if (plugin.isSwarmedSweetgrubMound(highlightedObject))
+            {
+                continue;
+            }
 
             if (isEnabled(highlightedObject, flashOn))
             {
@@ -260,7 +264,7 @@ public class TroubleBrewingHighlighterOverlay extends Overlay
                 return;
         }
 
-        int required = plugin.getRemainingRums() * perRum;
+        int required = plugin.getPossibleRumsLeft() * perRum;
         String text = current + " / " + required;
         TileObject tileObject = highlightedObject.getTileObject();
         Font previousFont = graphics.getFont();

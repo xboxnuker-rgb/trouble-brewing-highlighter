@@ -8,6 +8,8 @@ import java.util.IdentityHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.inject.Inject;
 import net.runelite.api.Client;
 import net.runelite.api.DecorativeObject;
@@ -26,6 +28,7 @@ import net.runelite.api.Tile;
 import net.runelite.api.TileObject;
 import net.runelite.api.WallObject;
 import net.runelite.api.WorldView;
+import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.DecorativeObjectDespawned;
 import net.runelite.api.events.DecorativeObjectSpawned;
 import net.runelite.api.events.GameObjectDespawned;
@@ -71,7 +74,12 @@ public class TroubleBrewingHighlighterPlugin extends Plugin
     private static final int BREW_CYCLE_GRACE_TICKS = 50;
     private static final int MAX_BOILER_LOGS = 10;
     private static final int MAX_RUM_PER_GAME = 29;
+    private static final int RUM_COLLECTION_CUSHION_SECONDS = 5;
     private static final int RUM_READY_STATE = 2;
+    private static final int SWARM_MOUND_DISTANCE = 2;
+    private static final Pattern MATCH_TIME_PATTERN = Pattern.compile(
+        "(\\d+)(?::(\\d{1,2}))?"
+    );
     private static final long MONKEY_PAIR_WINDOW_MS = 30_000L;
     private static final String MONKEY_CAREFUL_KEYWORD = "careful";
     private static final String MONKEY_ANGRY_KEYWORD = "angry";
@@ -116,6 +124,9 @@ public class TroubleBrewingHighlighterPlugin extends Plugin
         new EnumMap<>(ResourceType.class);
     private final Map<NPC, HighlightedNpc> highlightedNpcs = new IdentityHashMap<>();
     private final Set<NPC> vicinityNpcs = Collections.newSetFromMap(new IdentityHashMap<>());
+    private final Set<NPC> swarmNpcs = Collections.newSetFromMap(new IdentityHashMap<>());
+    private final Set<TileObject> swarmedSweetgrubMounds =
+        Collections.newSetFromMap(new IdentityHashMap<>());
     private int bootstrapTicksRemaining;
     private int piecesOfEight;
     private int expectedPiecesOfEight;
@@ -137,6 +148,7 @@ public class TroubleBrewingHighlighterPlugin extends Plugin
     private int teamBridgeRepairParts;
     private int teamRumMade;
     private int rumLoadsAvailable;
+    private int possibleRumsLeft;
     private int brewCycleEndTick = -1;
     private boolean teamHopperOnFire;
     private boolean teamPipesOnFire;
@@ -270,6 +282,10 @@ public class TroubleBrewingHighlighterPlugin extends Plugin
     {
         highlightedNpcs.remove(event.getNpc());
         vicinityNpcs.remove(event.getNpc());
+        if (swarmNpcs.remove(event.getNpc()))
+        {
+            refreshSwarmedSweetgrubMounds();
+        }
     }
 
     @Subscribe
@@ -448,6 +464,8 @@ public class TroubleBrewingHighlighterPlugin extends Plugin
             decrementObjectCount(previous);
             incrementObjectCount(current);
         }
+
+        updateSwarmedSweetgrubMound(current);
     }
 
     private void untrackObject(TileObject object)
@@ -457,6 +475,7 @@ public class TroubleBrewingHighlighterPlugin extends Plugin
         {
             decrementObjectCount(removed);
         }
+        swarmedSweetgrubMounds.remove(object);
     }
 
     private void incrementObjectCount(HighlightedObject highlightedObject)
@@ -569,6 +588,11 @@ public class TroubleBrewingHighlighterPlugin extends Plugin
 
     private void trackNpc(NPC npc)
     {
+        if (npc.getId() == NpcID.BREW_SWARM && swarmNpcs.add(npc))
+        {
+            refreshSwarmedSweetgrubMounds();
+        }
+
         if (isVicinityNpc(npc.getId()))
         {
             vicinityNpcs.add(npc);
@@ -584,6 +608,44 @@ public class TroubleBrewingHighlighterPlugin extends Plugin
         }
     }
 
+    private void refreshSwarmedSweetgrubMounds()
+    {
+        swarmedSweetgrubMounds.clear();
+        for (HighlightedObject highlightedObject : highlightedObjects.values())
+        {
+            updateSwarmedSweetgrubMound(highlightedObject);
+        }
+    }
+
+    private void updateSwarmedSweetgrubMound(HighlightedObject highlightedObject)
+    {
+        TileObject tileObject = highlightedObject.getTileObject();
+        if (highlightedObject.getResourceType() != ResourceType.BAIT)
+        {
+            swarmedSweetgrubMounds.remove(tileObject);
+            return;
+        }
+
+        WorldPoint moundLocation = tileObject.getWorldLocation();
+        for (NPC swarm : swarmNpcs)
+        {
+            if (isSwarmNearMound(moundLocation, swarm.getWorldLocation()))
+            {
+                swarmedSweetgrubMounds.add(tileObject);
+                return;
+            }
+        }
+
+        swarmedSweetgrubMounds.remove(tileObject);
+    }
+
+    static boolean isSwarmNearMound(WorldPoint moundLocation, WorldPoint swarmLocation)
+    {
+        return moundLocation != null
+            && swarmLocation != null
+            && moundLocation.distanceTo(swarmLocation) <= SWARM_MOUND_DISTANCE;
+    }
+
     private void clearCache()
     {
         highlightedObjects.clear();
@@ -591,6 +653,8 @@ public class TroubleBrewingHighlighterPlugin extends Plugin
         blueTeamObjectCounts.clear();
         highlightedNpcs.clear();
         vicinityNpcs.clear();
+        swarmNpcs.clear();
+        swarmedSweetgrubMounds.clear();
     }
 
     private void updatePiecesOfEight()
@@ -706,6 +770,11 @@ public class TroubleBrewingHighlighterPlugin extends Plugin
         matchTime = cleanWidgetText(
             client.getWidget(InterfaceID.BrewOverlay.BREW_TIME_DISPLAY)
         );
+        possibleRumsLeft = calculatePossibleRumsLeft(
+            teamRumMade,
+            parseMatchSeconds(matchTime),
+            getBrewCycleSecondsRemaining()
+        );
     }
 
     private void resetBrewStatus()
@@ -728,6 +797,7 @@ public class TroubleBrewingHighlighterPlugin extends Plugin
         teamBridgeRepairParts = 0;
         teamRumMade = 0;
         rumLoadsAvailable = 0;
+        possibleRumsLeft = 0;
         brewCycleEndTick = -1;
         teamHopperOnFire = false;
         teamPipesOnFire = false;
@@ -934,6 +1004,11 @@ public class TroubleBrewingHighlighterPlugin extends Plugin
         return Collections.unmodifiableCollection(highlightedNpcs.values());
     }
 
+    boolean isSwarmedSweetgrubMound(HighlightedObject highlightedObject)
+    {
+        return swarmedSweetgrubMounds.contains(highlightedObject.getTileObject());
+    }
+
     boolean isTroubleBrewingSceneLoaded()
     {
         return !highlightedObjects.isEmpty();
@@ -1007,14 +1082,83 @@ public class TroubleBrewingHighlighterPlugin extends Plugin
         return teamBark;
     }
 
-    int getRemainingRums()
+    int getPossibleRumsLeft()
     {
-        return remainingRums(teamRumMade);
+        return possibleRumsLeft;
     }
 
     static int remainingRums(int teamRumMade)
     {
         return Math.max(MAX_RUM_PER_GAME - Math.max(teamRumMade, 0), 0);
+    }
+
+    static int calculatePossibleRumsLeft(
+        int teamRumMade,
+        int matchSecondsRemaining,
+        int cycleSecondsRemaining)
+    {
+        int capacityRemaining = remainingRums(teamRumMade);
+        if (capacityRemaining == 0 || matchSecondsRemaining < 0)
+        {
+            return capacityRemaining;
+        }
+
+        int productionSeconds = matchSecondsRemaining - RUM_COLLECTION_CUSHION_SECONDS;
+        if (productionSeconds <= 0)
+        {
+            return 0;
+        }
+
+        int possibleCycles;
+        if (cycleSecondsRemaining >= 0)
+        {
+            if (cycleSecondsRemaining > productionSeconds)
+            {
+                return 0;
+            }
+
+            possibleCycles = 1 + fullCyclesInSeconds(
+                productionSeconds - cycleSecondsRemaining
+            );
+        }
+        else
+        {
+            possibleCycles = fullCyclesInSeconds(productionSeconds);
+        }
+
+        return Math.min(capacityRemaining, possibleCycles);
+    }
+
+    private static int fullCyclesInSeconds(int seconds)
+    {
+        // One game tick is 0.6 seconds, represented as 3 / 5 to avoid rounding.
+        return (Math.max(seconds, 0) * 5) / (BREW_CYCLE_TICKS * 3);
+    }
+
+    static int parseMatchSeconds(String text)
+    {
+        if (text == null)
+        {
+            return -1;
+        }
+
+        Matcher matcher = MATCH_TIME_PATTERN.matcher(text);
+        if (!matcher.find())
+        {
+            return -1;
+        }
+
+        try
+        {
+            int minutes = Integer.parseInt(matcher.group(1));
+            String secondsText = matcher.group(2);
+            int seconds = secondsText == null ? 0 : Integer.parseInt(secondsText);
+            return Math.max((minutes * 60) + Math.min(seconds, 59), 0);
+        }
+        catch (NumberFormatException ex)
+        {
+            return -1;
+        }
     }
 
     int getRumLoadsAvailable()
@@ -1061,15 +1205,6 @@ public class TroubleBrewingHighlighterPlugin extends Plugin
 
         int ticksRemaining = Math.max(brewCycleEndTick - client.getTickCount(), 0);
         return ticksRemaining == 0 ? 0 : Math.max((ticksRemaining * 3) / 5, 1);
-    }
-
-    boolean hasSuppliesForBatch()
-    {
-        return teamBitternuts >= 1
-            && teamSweetgrubs >= 1
-            && teamBuckets >= 5
-            && teamColouredWater >= 3
-            && teamBark >= 1;
     }
 
     boolean needsBoilerLogs()
@@ -1165,9 +1300,23 @@ public class TroubleBrewingHighlighterPlugin extends Plugin
         {
             return "Light boilers";
         }
-        if (!hasSuppliesForBatch())
+
+        int possibleRumsLeft = getPossibleRumsLeft();
+        String ingredientAction = lowestIngredientAction(
+            possibleRumsLeft,
+            teamBitternuts,
+            teamSweetgrubs,
+            teamBuckets,
+            teamColouredWater,
+            teamBark
+        );
+        if (ingredientAction != null)
         {
-            return "Add ingredients";
+            return ingredientAction;
+        }
+        if (possibleRumsLeft == 0)
+        {
+            return "Run supplied";
         }
         if (needsBoilerLogs())
         {
@@ -1178,6 +1327,94 @@ public class TroubleBrewingHighlighterPlugin extends Plugin
             return "Brewing";
         }
         return "Keep supplies flowing";
+    }
+
+    static String lowestIngredientAction(
+        int possibleRumsLeft,
+        int bitternuts,
+        int sweetgrubs,
+        int buckets,
+        int colouredWater,
+        int bark)
+    {
+        if (possibleRumsLeft <= 0)
+        {
+            return null;
+        }
+
+        String lowestAction = null;
+        int lowestCurrent = 0;
+        int lowestRequired = 1;
+
+        if (bitternuts < possibleRumsLeft)
+        {
+            lowestAction = "Fill bitternuts";
+            lowestCurrent = bitternuts;
+            lowestRequired = possibleRumsLeft;
+        }
+        if (sweetgrubs < possibleRumsLeft
+            && isLowerSupplyRatio(
+                sweetgrubs,
+                possibleRumsLeft,
+                lowestAction,
+                lowestCurrent,
+                lowestRequired))
+        {
+            lowestAction = "Fill sweetgrubs";
+            lowestCurrent = sweetgrubs;
+            lowestRequired = possibleRumsLeft;
+        }
+
+        int bucketTarget = possibleRumsLeft * 5;
+        if (buckets < bucketTarget
+            && isLowerSupplyRatio(
+                buckets,
+                bucketTarget,
+                lowestAction,
+                lowestCurrent,
+                lowestRequired))
+        {
+            lowestAction = "Fill water buckets";
+            lowestCurrent = buckets;
+            lowestRequired = bucketTarget;
+        }
+
+        int colouredWaterTarget = possibleRumsLeft * 3;
+        if (colouredWater < colouredWaterTarget
+            && isLowerSupplyRatio(
+                colouredWater,
+                colouredWaterTarget,
+                lowestAction,
+                lowestCurrent,
+                lowestRequired))
+        {
+            lowestAction = "Fill coloured water";
+            lowestCurrent = colouredWater;
+            lowestRequired = colouredWaterTarget;
+        }
+        if (bark < possibleRumsLeft
+            && isLowerSupplyRatio(
+                bark,
+                possibleRumsLeft,
+                lowestAction,
+                lowestCurrent,
+                lowestRequired))
+        {
+            lowestAction = "Fill scrapey bark";
+        }
+
+        return lowestAction;
+    }
+
+    private static boolean isLowerSupplyRatio(
+        int current,
+        int required,
+        String lowestAction,
+        int lowestCurrent,
+        int lowestRequired)
+    {
+        return lowestAction == null
+            || (long) current * lowestRequired < (long) lowestCurrent * required;
     }
 
     Widget getRecommendedMonkeyChoice()

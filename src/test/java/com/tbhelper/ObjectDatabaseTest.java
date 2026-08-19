@@ -1,8 +1,11 @@
 package com.tbhelper;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
+import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.NpcID;
 import net.runelite.api.gameval.ObjectID;
@@ -81,6 +84,19 @@ public class ObjectDatabaseTest
     {
         assertEquals(ResourceType.BAIT, ObjectDatabase.getObject(ObjectID.BREW_SWEETGRUB_MOUND));
         assertNull(ObjectDatabase.getObject(ObjectID.BREW_SWEETGRUB_MOUND_DEPELETED));
+    }
+
+    @Test
+    public void limitsSwarmSuppressionToTheNearbyMound()
+    {
+        WorldPoint mound = new WorldPoint(3200, 3200, 0);
+
+        assertTrue(TroubleBrewingHighlighterPlugin.isSwarmNearMound(
+            mound, new WorldPoint(3202, 3201, 0)));
+        assertFalse(TroubleBrewingHighlighterPlugin.isSwarmNearMound(
+            mound, new WorldPoint(3203, 3200, 0)));
+        assertFalse(TroubleBrewingHighlighterPlugin.isSwarmNearMound(
+            mound, new WorldPoint(3200, 3200, 1)));
     }
 
     @Test
@@ -196,6 +212,66 @@ public class ObjectDatabaseTest
         assertEquals(22, TroubleBrewingHighlighterPlugin.remainingRums(7));
         assertEquals(0, TroubleBrewingHighlighterPlugin.remainingRums(29));
         assertEquals(0, TroubleBrewingHighlighterPlugin.remainingRums(30));
+    }
+
+    @Test
+    public void limitsRemainingRumToCyclesThatCanFinish()
+    {
+        assertPossibleRumsLeft(29, 0, 1200, -1);
+        assertPossibleRumsLeft(29, 0, 1140, -1);
+        assertPossibleRumsLeft(23, 0, 900, -1);
+        assertPossibleRumsLeft(2, 0, 120, -1);
+        assertPossibleRumsLeft(3, 0, 120, 10);
+        assertPossibleRumsLeft(1, 0, 30, 10);
+        assertPossibleRumsLeft(0, 0, 30, -1);
+        assertPossibleRumsLeft(0, 0, 5, 0);
+        assertPossibleRumsLeft(22, 7, 1200, -1);
+        assertPossibleRumsLeft(29, 0, -1, -1);
+    }
+
+    @Test
+    public void parsesNativeMatchTimerText()
+    {
+        assertEquals(900, TroubleBrewingHighlighterPlugin.parseMatchSeconds(
+            "Time Left: 15 Mins"));
+        assertEquals(125, TroubleBrewingHighlighterPlugin.parseMatchSeconds(
+            "Time Left: 2:05"));
+        assertEquals(-1, TroubleBrewingHighlighterPlugin.parseMatchSeconds("-"));
+    }
+
+    @Test
+    public void recommendsTheLeastStockedRequiredIngredient()
+    {
+        assertEquals(
+            "Fill sweetgrubs",
+            TroubleBrewingHighlighterPlugin.lowestIngredientAction(
+                6, 6, 2, 30, 18, 6)
+        );
+        assertEquals(
+            "Fill water buckets",
+            TroubleBrewingHighlighterPlugin.lowestIngredientAction(
+                6, 4, 6, 5, 18, 6)
+        );
+        assertNull(TroubleBrewingHighlighterPlugin.lowestIngredientAction(
+            6, 6, 6, 30, 18, 6));
+        assertNull(TroubleBrewingHighlighterPlugin.lowestIngredientAction(
+            0, 0, 0, 0, 0, 0));
+    }
+
+    private static void assertPossibleRumsLeft(
+        int expected,
+        int teamRumMade,
+        int matchSecondsRemaining,
+        int cycleSecondsRemaining)
+    {
+        assertEquals(
+            expected,
+            TroubleBrewingHighlighterPlugin.calculatePossibleRumsLeft(
+                teamRumMade,
+                matchSecondsRemaining,
+                cycleSecondsRemaining
+            )
+        );
     }
 
     @Test
