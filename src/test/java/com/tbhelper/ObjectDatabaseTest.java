@@ -215,6 +215,14 @@ public class ObjectDatabaseTest
     }
 
     @Test
+    public void clampsNativeContributionToRewardLimit()
+    {
+        assertEquals(0, TroubleBrewingHighlighterPlugin.clampContribution(-1));
+        assertEquals(44, TroubleBrewingHighlighterPlugin.clampContribution(44));
+        assertEquals(100, TroubleBrewingHighlighterPlugin.clampContribution(101));
+    }
+
+    @Test
     public void limitsRemainingRumToCyclesThatCanFinish()
     {
         assertPossibleRumsLeft(29, 0, 1200, -1);

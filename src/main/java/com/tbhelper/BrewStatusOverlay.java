@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import javax.inject.Inject;
+import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPanel;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayPriority;
@@ -33,6 +34,10 @@ public class BrewStatusOverlay extends OverlayPanel
         this.plugin = plugin;
         this.config = config;
 
+        // RuneLite promotes freely positioned UNDER_WIDGETS overlays above
+        // interfaces. ABOVE_SCENE preserves Alt-dragging while allowing game
+        // interfaces to cover this panel.
+        setLayer(OverlayLayer.ABOVE_SCENE);
         setPosition(OverlayPosition.TOP_RIGHT);
         setPriority(OverlayPriority.LOW);
         setMovable(true);

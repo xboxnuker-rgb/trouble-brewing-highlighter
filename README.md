@@ -6,7 +6,14 @@ It focuses on finding and following each brewing route while showing cached
 Pieces of Eight totals and expected rewards; it does not present match-score
 breakdowns or automate any interaction.
 
-Current version: **1.4.1**.
+Current version: **1.4.2**.
+
+## Version 1.4.2
+
+- Adds the native personal-contribution counter to the movable Pieces of Eight
+  panel during a match, between the current total and expected total.
+- Keeps the movable Brew Status and Pieces of Eight panels beneath game
+  interfaces, so windows such as Collection Log cover them normally.
 
 ## Version 1.4.1
 
@@ -60,8 +67,9 @@ Current version: **1.4.1**.
 - Provides configurable hulls, tiles, outline width and fill opacity.
 - Shows the player's cached Pieces of Eight total near Trouble Brewing in a
   standard overlay panel that can be repositioned with Alt-drag. During a
-  match, it also shows the expected new total from capped contribution and the
-  rum bottles already produced by the player's team.
+  match, it also shows the native personal-contribution counter and the
+  expected new total from capped contribution and rum bottles already produced
+  by the player's team.
 - Passively highlights Careful (option 3) for the first monkey and Angry
   (option 1) for its paired follow-up. The pair resets after completion or a
   30-second gap, so repeated pairs remain in the correct order. Its default
@@ -77,8 +85,8 @@ only in the inventory, tool selector and at their relevant world stations.
 The Pieces of Eight value is cached rather than polled during rendering. It is
 refreshed when the value changes, when the reward shop opens, and when the
 end-of-game interface opens. The in-match expected value is derived from the
-cached native totals: up to 100 personal-contribution points plus 10 for each
-bottle in the player's team rum total.
+same cached native contribution shown in the panel (up to 100), plus 10 for
+each bottle in the player's team rum total.
 
 The Brew Status panel is deliberately phrased for players who do not already
 know the minigame. Its supply target starts at the 29-rum theoretical cap, then

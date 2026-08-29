@@ -129,6 +129,7 @@ public class TroubleBrewingHighlighterPlugin extends Plugin
         Collections.newSetFromMap(new IdentityHashMap<>());
     private int bootstrapTicksRemaining;
     private int piecesOfEight;
+    private int playerContribution;
     private int expectedPiecesOfEight;
     private int teamBitternuts;
     private int teamSweetgrubs;
@@ -182,6 +183,7 @@ public class TroubleBrewingHighlighterPlugin extends Plugin
         overlayManager.remove(monkeyDialogueOverlay);
         bootstrapTicksRemaining = 0;
         piecesOfEight = 0;
+        playerContribution = 0;
         expectedPiecesOfEight = 0;
         resetBrewStatus();
         resetMonkeyAdviceCycle();
@@ -673,19 +675,19 @@ public class TroubleBrewingHighlighterPlugin extends Plugin
     {
         if (!isTroubleBrewingMatchActive())
         {
+            playerContribution = 0;
             expectedPiecesOfEight = piecesOfEight;
             return;
         }
 
-        int contribution = Math.min(
-            Math.max(client.getVarbitValue(VarbitID.BREW_PLAYER_REWARD), 0),
-            100
+        playerContribution = clampContribution(
+            client.getVarbitValue(VarbitID.BREW_PLAYER_REWARD)
         );
         Widget teamScoreWidget = client.getWidget(
             isBlueTeam() ? InterfaceID.BrewOverlay.BLUE_SCORE : InterfaceID.BrewOverlay.RED_SCORE
         );
         teamRumMade = parseNonNegativeInteger(teamScoreWidget);
-        expectedPiecesOfEight = piecesOfEight + contribution + (teamRumMade * 10);
+        expectedPiecesOfEight = piecesOfEight + playerContribution + (teamRumMade * 10);
     }
 
     private void updateBrewStatus()
@@ -1052,9 +1054,19 @@ public class TroubleBrewingHighlighterPlugin extends Plugin
         return piecesOfEight;
     }
 
+    int getPlayerContribution()
+    {
+        return playerContribution;
+    }
+
     int getExpectedPiecesOfEight()
     {
         return expectedPiecesOfEight;
+    }
+
+    static int clampContribution(int contribution)
+    {
+        return Math.min(Math.max(contribution, 0), 100);
     }
 
     int getTeamBitternuts()
