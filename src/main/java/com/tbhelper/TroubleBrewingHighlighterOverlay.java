@@ -101,7 +101,7 @@ public class TroubleBrewingHighlighterOverlay extends Overlay
             renderBoilerLogs(
                 graphics,
                 highlightedObject,
-                showStationAmounts && config.showBoilerFuel()
+                showStationAmounts && plugin.isResourceHighlightEnabled(resourceType)
             );
             renderHopperAmount(graphics, highlightedObject, showStationAmounts);
             renderFireGuidance(graphics, highlightedObject);
@@ -220,7 +220,9 @@ public class TroubleBrewingHighlighterOverlay extends Overlay
         TroubleBrewingHighlighterPlugin.HighlightedObject highlightedObject,
         boolean showStationAmounts)
     {
-        if (!showStationAmounts || !plugin.isLocalTeamObject(highlightedObject))
+        if (!showStationAmounts
+            || !plugin.isLocalTeamObject(highlightedObject)
+            || !plugin.isResourceHighlightEnabled(highlightedObject.getResourceType()))
         {
             return;
         }
@@ -627,44 +629,7 @@ public class TroubleBrewingHighlighterOverlay extends Overlay
 
     private boolean isCategoryEnabled(ResourceType resourceType)
     {
-        switch (resourceType)
-        {
-            case WATER:
-                return config.showWater();
-            case COLOURED_WATER:
-                return config.showColouredWater();
-            case HOPPERS:
-                return config.showHoppers();
-            case BOILER_FUEL:
-            case BOILER_EMPTY:
-            case BOILER_UNLIT:
-            case BOILER_ACTIVE:
-                return config.showBoilerFuel();
-            case BARK:
-                return config.showBark();
-            case PROCESSED_BARK:
-                return config.showProcessedBark();
-            case BAIT:
-                return config.showBait();
-            case GRUBS:
-                return config.showGrubs();
-            case FLOWERS:
-                return config.showFlowers();
-            case BITTERNUTS:
-                return config.showBitternuts();
-            case BITTERNUTS_FINAL:
-                return config.showBitternutsFinal();
-            case ACTIVE_FIRE:
-            case PIPE_REPAIR:
-            case LUMBER_REPAIR:
-            case DAMAGE_REPAIR:
-                return config.showDamageRepair();
-            case CONVEYOR:
-            case RUM:
-                return config.showRum();
-            default:
-                return false;
-        }
+        return plugin.isResourceHighlightEnabled(resourceType);
     }
 
     private boolean isFlashing(ResourceType resourceType)

@@ -17,7 +17,7 @@ Matching colours connect world objects, inventory supplies and the tool selector
 
 - **Resources:** toggle individual routes, boiler fuel, team hoppers and damage/repair highlights independently.
 - **Colours:** customise each route to make the supplies you use easiest to spot.
-- **Display:** choose convex hulls, tiles, outline width and fill opacity.
+- **Display:** inventory items use item-outline highlights by default. Choose item outline, full slot or off, and adjust inventory outline size separately from world outlines.
 - **Flashing:** choose which categories draw extra attention. Fires and active conveyors flash by default; other categories start steady.
 
 <table>
@@ -78,6 +78,19 @@ The options are split into display and resources, flashing and helpers, and a ma
     <td><a href="docs/images/boiler-guidance.png"><img src="docs/images/boiler-guidance.png" alt="Trouble Brewing boilers showing fuel guidance"></a></td>
   </tr>
 </table>
+
+## Run water with AFKer Mode
+
+<p align="center">
+  <a href="docs/images/afker-mode-settings.png"><img src="docs/images/afker-mode-settings.png" alt="AFKer Mode settings with the contribution cutoff and optional bucket count"></a>
+</p>
+
+AFKer Mode starts disabled. When enabled, it reduces highlights to the water route, active fires, damaged structures and repair materials.
+
+- Water pumps, inventory buckets, the supplied bucket and the upstairs water station remain highlighted until 100 contribution. During a fire, the water highlights return so the emergency can still be handled.
+- **Stop Water at 100** starts enabled. Turn it off to retain the original water-highlight behaviour.
+- **Show Water Bucket Count** starts disabled and controls bucket labels only while AFKer Mode is active. Normal mode continues to use **Show Station Amounts** for inventory labels.
+- Brew Status contracts to the rum instruction and Polly's message. Contribution and expected Pieces of Eight remain in their separate panel.
 
 ## Handle repairs and monkey runs
 

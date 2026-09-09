@@ -45,6 +45,38 @@ public class TroubleBrewingHighlighterConfigTest
     }
 
     @Test
+    public void defaultsInventoryToItemOutlineAndAfkerModeOff()
+    {
+        assertEquals(InventoryHighlightStyle.ITEM_OUTLINE, config.inventoryHighlightStyle());
+        assertEquals(2, config.inventoryOutlineSize());
+        assertFalse(config.afkerMode());
+        assertTrue(config.stopWaterHighlightsAt100());
+        assertFalse(config.showWaterBucketCount());
+    }
+
+    @Test
+    public void afkerWaterStopsAtContributionCapUnlessFireIsActive()
+    {
+        assertTrue(TroubleBrewingHighlighterPlugin.shouldShowAfkerWater(true, 99, false));
+        assertFalse(TroubleBrewingHighlighterPlugin.shouldShowAfkerWater(true, 100, false));
+        assertTrue(TroubleBrewingHighlighterPlugin.shouldShowAfkerWater(true, 100, true));
+        assertTrue(TroubleBrewingHighlighterPlugin.shouldShowAfkerWater(false, 100, false));
+    }
+
+    @Test
+    public void bucketCountToggleOnlyOverridesNormalBadgesInAfkerMode()
+    {
+        assertTrue(TroubleBrewingInventoryOverlay.shouldShowSupplyBadge(
+            false, true, false, true));
+        assertFalse(TroubleBrewingInventoryOverlay.shouldShowSupplyBadge(
+            true, true, false, true));
+        assertTrue(TroubleBrewingInventoryOverlay.shouldShowSupplyBadge(
+            true, true, true, true));
+        assertFalse(TroubleBrewingInventoryOverlay.shouldShowSupplyBadge(
+            true, false, true, true));
+    }
+
+    @Test
     public void defaultsActiveConveyorsToOrange()
     {
         assertEquals(new Color(255, 108, 0), config.conveyorColor());

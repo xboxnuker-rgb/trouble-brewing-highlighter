@@ -1059,6 +1059,77 @@ public class TroubleBrewingHighlighterPlugin extends Plugin
         return playerContribution;
     }
 
+    boolean isResourceHighlightEnabled(ResourceType resourceType)
+    {
+        if (config.afkerMode())
+        {
+            switch (resourceType)
+            {
+                case WATER:
+                    return config.showWater()
+                        && shouldShowAfkerWater(
+                            config.stopWaterHighlightsAt100(),
+                            playerContribution,
+                            hasLocalTeamFire()
+                        );
+                case ACTIVE_FIRE:
+                case PIPE_REPAIR:
+                case LUMBER_REPAIR:
+                case DAMAGE_REPAIR:
+                    return config.showDamageRepair();
+                default:
+                    return false;
+            }
+        }
+
+        switch (resourceType)
+        {
+            case WATER:
+                return config.showWater();
+            case COLOURED_WATER:
+                return config.showColouredWater();
+            case HOPPERS:
+                return config.showHoppers();
+            case BOILER_FUEL:
+            case BOILER_EMPTY:
+            case BOILER_UNLIT:
+            case BOILER_ACTIVE:
+                return config.showBoilerFuel();
+            case BARK:
+                return config.showBark();
+            case PROCESSED_BARK:
+                return config.showProcessedBark();
+            case BAIT:
+                return config.showBait();
+            case GRUBS:
+                return config.showGrubs();
+            case FLOWERS:
+                return config.showFlowers();
+            case BITTERNUTS:
+                return config.showBitternuts();
+            case BITTERNUTS_FINAL:
+                return config.showBitternutsFinal();
+            case ACTIVE_FIRE:
+            case PIPE_REPAIR:
+            case LUMBER_REPAIR:
+            case DAMAGE_REPAIR:
+                return config.showDamageRepair();
+            case CONVEYOR:
+            case RUM:
+                return config.showRum();
+            default:
+                return false;
+        }
+    }
+
+    static boolean shouldShowAfkerWater(
+        boolean stopAt100,
+        int contribution,
+        boolean teamHasFire)
+    {
+        return !stopAt100 || contribution < 100 || teamHasFire;
+    }
+
     int getExpectedPiecesOfEight()
     {
         return expectedPiecesOfEight;

@@ -8,13 +8,18 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.Stroke;
+import java.awt.image.BufferedImage;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import javax.inject.Inject;
 import net.runelite.api.Client;
 import net.runelite.api.gameval.InterfaceID;
 import net.runelite.api.gameval.ItemID;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetItem;
+import net.runelite.client.game.ItemManager;
 import net.runelite.client.ui.overlay.WidgetItemOverlay;
+import net.runelite.client.util.ImageUtil;
 
 /** Draws the same category colours over matching Trouble Brewing inventory items. */
 public class TroubleBrewingInventoryOverlay extends WidgetItemOverlay
@@ -26,17 +31,30 @@ public class TroubleBrewingInventoryOverlay extends WidgetItemOverlay
     private static final Color SUPPLY_READY_COLOR = new Color(85, 220, 100);
     private static final Color SUPPLY_PARTIAL_COLOR = new Color(255, 145, 35);
     private static final Color SUPPLY_EMPTY_COLOR = new Color(235, 80, 80);
+    private static final int ITEM_OUTLINE_CACHE_SIZE = 128;
     private final Client client;
+    private final ItemManager itemManager;
     private final TroubleBrewingHighlighterPlugin plugin;
     private final TroubleBrewingHighlighterConfig config;
+    private final Map<ItemOutlineKey, BufferedImage> itemOutlineCache =
+        new LinkedHashMap<ItemOutlineKey, BufferedImage>(ITEM_OUTLINE_CACHE_SIZE, 0.75F, true)
+        {
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<ItemOutlineKey, BufferedImage> eldest)
+            {
+                return size() > ITEM_OUTLINE_CACHE_SIZE;
+            }
+        };
 
     @Inject
     private TroubleBrewingInventoryOverlay(
         Client client,
+        ItemManager itemManager,
         TroubleBrewingHighlighterPlugin plugin,
         TroubleBrewingHighlighterConfig config)
     {
         this.client = client;
+        this.itemManager = itemManager;
         this.plugin = plugin;
         this.config = config;
         showOnInventory();
@@ -80,6 +98,12 @@ public class TroubleBrewingInventoryOverlay extends WidgetItemOverlay
             return;
         }
 
+        InventoryHighlightStyle highlightStyle = config.inventoryHighlightStyle();
+        if (highlightStyle == InventoryHighlightStyle.OFF)
+        {
+            return;
+        }
+
         ResourceType resourceType = ObjectDatabase.getItem(itemId);
         if ((itemId == ItemID.LOGS && !plugin.needsBoilerLogs())
             || (itemId == ItemID.TINDERBOX && !plugin.needsBoilerLighting()))
@@ -90,7 +114,7 @@ public class TroubleBrewingInventoryOverlay extends WidgetItemOverlay
         boolean emergencyWater = itemId == ItemID.BUCKET_WATER
             && plugin.hasLocalTeamFire()
             && config.showDamageRepair();
-        if (resourceType == null || !isCategoryEnabled(resourceType))
+        if (resourceType == null || (!emergencyWater && !isCategoryEnabled(resourceType)))
         {
             return;
         }
@@ -103,9 +127,23 @@ public class TroubleBrewingInventoryOverlay extends WidgetItemOverlay
 
         if (!isFlashing(resourceType, emergencyWater) || isFlashOn())
         {
-            renderBounds(graphics, bounds, emergencyWater
+            Color colour = emergencyWater
                 ? config.damageRepairColour()
-                : colourFor(resourceType));
+                : colourFor(resourceType);
+            if (highlightStyle == InventoryHighlightStyle.ITEM_OUTLINE)
+            {
+                renderItemOutline(
+                    graphics,
+                    bounds,
+                    itemId,
+                    widgetItem.getQuantity(),
+                    colour
+                );
+            }
+            else
+            {
+                renderBounds(graphics, bounds, colour);
+            }
         }
         renderSupplyBadge(graphics, bounds, itemId, resourceType);
     }
@@ -116,7 +154,19 @@ public class TroubleBrewingInventoryOverlay extends WidgetItemOverlay
         int itemId,
         ResourceType resourceType)
     {
-        if (!config.showStationAmounts() || !plugin.isTroubleBrewingMatchActive())
+        if (!plugin.isTroubleBrewingMatchActive())
+        {
+            return;
+        }
+
+        boolean waterBucket = isWaterBucket(itemId);
+        boolean showBadge = shouldShowSupplyBadge(
+            config.afkerMode(),
+            waterBucket,
+            config.showWaterBucketCount(),
+            config.showStationAmounts()
+        );
+        if (!showBadge)
         {
             return;
         }
@@ -245,6 +295,65 @@ public class TroubleBrewingInventoryOverlay extends WidgetItemOverlay
         graphics.setColor(oldColor);
     }
 
+    private void renderItemOutline(
+        Graphics2D graphics,
+        Rectangle bounds,
+        int itemId,
+        int quantity,
+        Color colour)
+    {
+        int size = Math.max(1, Math.min(config.inventoryOutlineSize(), 9));
+        ItemOutlineKey key = new ItemOutlineKey(itemId, quantity, colour.getRGB(), size);
+        BufferedImage outline = itemOutlineCache.get(key);
+        if (outline == null)
+        {
+            outline = itemManager.getItemOutline(itemId, quantity, colour);
+            if (outline == null)
+            {
+                return;
+            }
+
+            int additionalFullLayers = (size - 1) / 4;
+            for (int layer = 0; layer < additionalFullLayers; layer++)
+            {
+                outline = ImageUtil.outlineImage(outline, colour, true);
+            }
+
+            int partialLayer = (size - 1) % 4;
+            if (partialLayer > 0)
+            {
+                Color partialColour = new Color(
+                    colour.getRed(),
+                    colour.getGreen(),
+                    colour.getBlue(),
+                    partialLayer * 64
+                );
+                outline = ImageUtil.outlineImage(outline, partialColour, true);
+            }
+            itemOutlineCache.put(key, outline);
+        }
+
+        graphics.drawImage(outline, bounds.x, bounds.y, null);
+    }
+
+    private static boolean isWaterBucket(int itemId)
+    {
+        return itemId == ItemID.BUCKET_EMPTY
+            || itemId == ItemID.BREW_BUCKET_DUMMY
+            || itemId == ItemID.BUCKET_WATER;
+    }
+
+    static boolean shouldShowSupplyBadge(
+        boolean afkerMode,
+        boolean waterBucket,
+        boolean showWaterBucketCount,
+        boolean showStationAmounts)
+    {
+        return afkerMode
+            ? waterBucket && showWaterBucketCount
+            : showStationAmounts;
+    }
+
     private boolean isFlashOn()
     {
         return (System.currentTimeMillis() / FLASH_INTERVAL_MS) % 2L == 0L;
@@ -258,44 +367,7 @@ public class TroubleBrewingInventoryOverlay extends WidgetItemOverlay
 
     private boolean isCategoryEnabled(ResourceType resourceType)
     {
-        switch (resourceType)
-        {
-            case WATER:
-                return config.showWater();
-            case COLOURED_WATER:
-                return config.showColouredWater();
-            case HOPPERS:
-                return config.showHoppers();
-            case BOILER_FUEL:
-            case BOILER_EMPTY:
-            case BOILER_UNLIT:
-            case BOILER_ACTIVE:
-                return config.showBoilerFuel();
-            case BARK:
-                return config.showBark();
-            case PROCESSED_BARK:
-                return config.showProcessedBark();
-            case BAIT:
-                return config.showBait();
-            case GRUBS:
-                return config.showGrubs();
-            case FLOWERS:
-                return config.showFlowers();
-            case BITTERNUTS:
-                return config.showBitternuts();
-            case BITTERNUTS_FINAL:
-                return config.showBitternutsFinal();
-            case ACTIVE_FIRE:
-            case PIPE_REPAIR:
-            case LUMBER_REPAIR:
-            case DAMAGE_REPAIR:
-                return config.showDamageRepair();
-            case CONVEYOR:
-            case RUM:
-                return config.showRum();
-            default:
-                return false;
-        }
+        return plugin.isResourceHighlightEnabled(resourceType);
     }
 
     private boolean isFlashing(ResourceType resourceType, boolean emergencyWater)
@@ -398,5 +470,49 @@ public class TroubleBrewingInventoryOverlay extends WidgetItemOverlay
     private static Color withAlpha(Color colour, int alpha)
     {
         return new Color(colour.getRed(), colour.getGreen(), colour.getBlue(), alpha);
+    }
+
+    private static final class ItemOutlineKey
+    {
+        private final int itemId;
+        private final int quantity;
+        private final int colour;
+        private final int size;
+
+        private ItemOutlineKey(int itemId, int quantity, int colour, int size)
+        {
+            this.itemId = itemId;
+            this.quantity = quantity;
+            this.colour = colour;
+            this.size = size;
+        }
+
+        @Override
+        public boolean equals(Object object)
+        {
+            if (this == object)
+            {
+                return true;
+            }
+            if (!(object instanceof ItemOutlineKey))
+            {
+                return false;
+            }
+
+            ItemOutlineKey other = (ItemOutlineKey) object;
+            return itemId == other.itemId
+                && quantity == other.quantity
+                && colour == other.colour
+                && size == other.size;
+        }
+
+        @Override
+        public int hashCode()
+        {
+            int result = itemId;
+            result = 31 * result + quantity;
+            result = 31 * result + colour;
+            return 31 * result + size;
+        }
     }
 }

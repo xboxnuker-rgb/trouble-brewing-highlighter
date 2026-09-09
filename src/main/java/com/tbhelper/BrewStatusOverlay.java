@@ -61,6 +61,12 @@ public class BrewStatusOverlay extends OverlayPanel
                 .build()
         );
 
+        if (config.afkerMode())
+        {
+            renderAfkerStatus();
+            return super.render(graphics);
+        }
+
         String nextAction = plugin.getBrewStatusAction();
         panelComponent.getChildren().add(
             LineComponent.builder()
@@ -109,6 +115,31 @@ public class BrewStatusOverlay extends OverlayPanel
         addLine("Time left", compactMatchTime(plugin.getMatchTime()), Color.WHITE);
 
         return super.render(graphics);
+    }
+
+    private void renderAfkerStatus()
+    {
+        addSection("RUM LEVEL");
+        boolean rumReady = plugin.isRumReady();
+        addMessage(
+            rumReady ? "Collect rum" : "Add more water to collect rum",
+            rumReady ? GOOD_COLOR : WARNING_COLOR
+        );
+
+        addSection("POLLY SAYS");
+        addMessage("Did you know rumming with friends", MUTED_COLOR);
+        addMessage("is nearly 4x faster for the", MUTED_COLOR);
+        addMessage("Collection Log items?", MUTED_COLOR);
+    }
+
+    private void addMessage(String text, Color color)
+    {
+        panelComponent.getChildren().add(
+            LineComponent.builder()
+                .left(text)
+                .leftColor(color)
+                .build()
+        );
     }
 
     private void addSection(String text)

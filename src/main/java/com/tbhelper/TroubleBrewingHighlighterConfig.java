@@ -45,6 +45,31 @@ public interface TroubleBrewingHighlighterConfig extends Config
 
     @ConfigItem(
         position = 2,
+        keyName = "inventoryHighlightStyle",
+        name = "Inventory Highlight Style",
+        description = "Draw highlights around the item itself, across its full slot, or hide inventory highlights",
+        section = displaySection
+    )
+    default InventoryHighlightStyle inventoryHighlightStyle()
+    {
+        return InventoryHighlightStyle.ITEM_OUTLINE;
+    }
+
+    @ConfigItem(
+        position = 3,
+        keyName = "inventoryOutlineSize",
+        name = "Inventory Outline Size",
+        description = "Fine-grained thickness for item-outline inventory highlights",
+        section = displaySection
+    )
+    @Range(min = 1, max = 9)
+    default int inventoryOutlineSize()
+    {
+        return 2;
+    }
+
+    @ConfigItem(
+        position = 4,
         keyName = "drawHull",
         name = "Draw Convex Hull",
         description = "Draw the model hull of matched scene objects",
@@ -56,7 +81,7 @@ public interface TroubleBrewingHighlighterConfig extends Config
     }
 
     @ConfigItem(
-        position = 3,
+        position = 5,
         keyName = "drawTile",
         name = "Draw Tile",
         description = "Draw tiles beneath matched objects and NPCs",
@@ -482,9 +507,53 @@ public interface TroubleBrewingHighlighterConfig extends Config
     }
 
     @ConfigSection(
+        name = "AFKer Mode",
+        description = "A reduced water-running view that keeps fire and repair guidance",
+        position = 4,
+        closedByDefault = true
+    )
+    String afkerSection = "afker";
+
+    @ConfigItem(
+        position = 0,
+        keyName = "afkerMode",
+        name = "Enable AFKer Mode",
+        description = "Only show the water route plus active fires and their repair guidance",
+        section = afkerSection
+    )
+    default boolean afkerMode()
+    {
+        return false;
+    }
+
+    @ConfigItem(
+        position = 1,
+        keyName = "stopWaterHighlightsAt100",
+        name = "Stop Water at 100",
+        description = "While AFKer Mode is enabled, hide water-route highlights at 100 contribution unless your team has a fire",
+        section = afkerSection
+    )
+    default boolean stopWaterHighlightsAt100()
+    {
+        return true;
+    }
+
+    @ConfigItem(
+        position = 2,
+        keyName = "showWaterBucketCount",
+        name = "Show Water Bucket Count",
+        description = "While AFKer Mode is enabled, show the team water-bucket total and target above highlighted inventory buckets",
+        section = afkerSection
+    )
+    default boolean showWaterBucketCount()
+    {
+        return false;
+    }
+
+    @ConfigSection(
         name = "Colours (Resetting plugin will restore intended highlights)",
         description = "Highlight colours",
-        position = 4
+        position = 5
     )
     String colourSection = "colours";
 

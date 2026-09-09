@@ -6,7 +6,18 @@ It focuses on finding and following each brewing route while showing cached
 Pieces of Eight totals and expected rewards; it does not present match-score
 breakdowns or automate any interaction.
 
-Current version: **1.4.2**.
+Current version: **1.5.0**.
+
+## Version 1.5.0
+
+- Changes inventory highlights to item outlines by default, with full-slot and
+  off modes plus a separate fine-grained inventory outline-size control.
+- Adds an optional AFKer Mode that keeps water, fire and repair guidance while
+  suppressing unrelated routes. Water guidance can stop at 100 contribution
+  and return during a fire, with an independent optional bucket-count label.
+- Reduces Brew Status to the rum instruction and Polly's message in AFKer Mode,
+  while keeping contribution and expected Pieces of Eight in their existing
+  separate panel.
 
 ## Version 1.4.2
 
