@@ -9,6 +9,8 @@
 
 Follow the brewing routes, see which supplies your team needs, and keep your Pieces of Eight progress in view.
 
+[![Ingredient totals above the Trouble Brewing processing stations](docs/images/station-amounts.png)](docs/images/station-amounts.png)
+
 ## Follow each resource route
 
 Matching colours connect world objects, inventory supplies and the tool selector. Water, flowers, coloured water, bark, sweetgrubs, bitternuts and finished rum each have their own route.
@@ -18,12 +20,64 @@ Matching colours connect world objects, inventory supplies and the tool selector
 - **Display:** choose convex hulls, tiles, outline width and fill opacity.
 - **Flashing:** choose which categories draw extra attention. Fires and active conveyors flash by default; other categories start steady.
 
+<table>
+  <tr>
+    <td><strong>Island resource highlights</strong></td>
+    <td><strong>Processing-route highlights</strong></td>
+  </tr>
+  <tr>
+    <td><a href="docs/images/route-example-island.png"><img src="docs/images/route-example-island.png" alt="Colour-coded Trouble Brewing resources around the island"></a></td>
+    <td><a href="docs/images/route-example-stations.png"><img src="docs/images/route-example-stations.png" alt="Colour-coded Trouble Brewing processing-route objects"></a></td>
+  </tr>
+</table>
+
+Highlights carry through to supplied tools and the inventory, where current/target badges show how much the team has collected.
+
+<table>
+  <tr>
+    <td><strong>Tool selector</strong></td>
+    <td><strong>Inventory supply targets</strong></td>
+  </tr>
+  <tr>
+    <td><a href="docs/images/tool-selector.png"><img src="docs/images/tool-selector.png" alt="Colour-coded supplies in the Trouble Brewing tool selector"></a></td>
+    <td><a href="docs/images/inventory-targets.png"><img src="docs/images/inventory-targets.png" alt="Highlighted inventory supplies with current and target amounts"></a></td>
+  </tr>
+</table>
+
+## Configure the highlights
+
+The options are split into display and resources, flashing and helpers, and a matching colour palette. Click any settings image to view it at full size.
+
+<table>
+  <tr>
+    <td><strong>Display &amp; resources</strong></td>
+    <td><strong>Flashing &amp; helpers</strong></td>
+    <td><strong>Colours</strong></td>
+  </tr>
+  <tr>
+    <td><a href="docs/images/settings-display-resources.png"><img src="docs/images/settings-display-resources.png" alt="Trouble Brewing display and resource settings"></a></td>
+    <td><a href="docs/images/settings-flashing-helpers.png"><img src="docs/images/settings-flashing-helpers.png" alt="Trouble Brewing flashing and helper settings"></a></td>
+    <td><a href="docs/images/settings-colours.png"><img src="docs/images/settings-colours.png" alt="Trouble Brewing highlight colour settings"></a></td>
+  </tr>
+</table>
+
 ## Know what to gather next
 
 - **Show Brew Status** displays a movable panel with the next action, ingredient targets, boiler fuel, rum state and time remaining.
 - Targets adjust to the rum that can still finish before the match ends. Red means empty, orange means more is needed, and green means enough for the remaining run.
 - **Show Station Amounts** adds supply totals to upstairs stations and current/target inventory badges. Keep these visible even with the Brew Status panel hidden.
 - Boilers distinguish empty, loaded-but-unlit and active states, highlighting logs or a tinderbox when useful.
+
+<table>
+  <tr>
+    <td><strong>Brew Status</strong></td>
+    <td><strong>Boiler guidance</strong></td>
+  </tr>
+  <tr>
+    <td><a href="docs/images/brew-status.png"><img src="docs/images/brew-status.png" alt="Brew Status panel showing the next action and supply targets"></a></td>
+    <td><a href="docs/images/boiler-guidance.png"><img src="docs/images/boiler-guidance.png" alt="Trouble Brewing boilers showing fuel guidance"></a></td>
+  </tr>
+</table>
 
 ## Handle repairs and monkey runs
 
